@@ -10,7 +10,7 @@ require.config({
         "paper" : "../lib/paper/dist/paper",
         "backbone" : "../lib/backbone/backbone",
         "underscore" : "../lib/underscore/underscore",
-        "mustache"  : "../lib/mustache/mustache"
+        "handlebars"  : "../lib/handlebars/handlebars"
     },
     
     shim: {
@@ -24,6 +24,10 @@ require.config({
 
         underscore: {
          exports: "_"
+        },
+
+        handlebars: {
+         exports: "Handlebars"
         }
     },
 });

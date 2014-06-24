@@ -20,9 +20,9 @@
 		function modifyCurve(point, remove) {
 			curve.segment2.point = point;
 			var length = curve.length;
-			var step = 10;
+			var step = 60;
 			var iteratively = false;
-			var flatten = true;
+			var flatten = false;
 			var num = Math.floor(length / step);
 			var prev = 0;
 			if (flatten) {
@@ -30,7 +30,7 @@
 				clone.flatten(step);
 				for (var i = 0; i < clone.segments.length; i++) {
 					var point = clone.segments[i].point;
-					var circle = new Path.Circle(point, step / 2);
+					var circle = new Path.Circle(point, step);
 					circle.strokeColor = 'red';
 					if (remove)
 						circle.removeOnMove();
@@ -42,7 +42,7 @@
 							? curve.getParameterAt(step, prev)
 							: curve.getParameterAt(pos);
 					var point = curve.getPointAt(t, true);
-					var circle = new Path.Circle(point, step / 2);
+					var circle = new Path.Circle(point, step / 4);
 					circle.strokeColor = 'red';
 					if (remove)
 						circle.removeOnMove();
