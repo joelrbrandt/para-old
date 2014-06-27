@@ -10,7 +10,8 @@ require.config({
         "paper" : "../lib/paper/dist/paper",
         "backbone" : "../lib/backbone/backbone",
         "underscore" : "../lib/underscore/underscore",
-        "handlebars"  : "../lib/handlebars/handlebars"
+        "handlebars"  : "../lib/handlebars/handlebars",
+        "toolbox": "../lib/toolbox/toolbox"
     },
     
     shim: {
@@ -28,6 +29,9 @@ require.config({
 
         handlebars: {
          exports: "Handlebars"
+        },
+        toolbox:{
+          exports: "Toolbox"
         }
     },
 });
