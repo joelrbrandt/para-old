@@ -13,7 +13,9 @@ require.config({
         'handlebars'  : '../lib/handlebars/handlebars',
         'toolbox': '../lib/toolbox/toolbox',
         'justmath': '../lib/justmath/justmath',
-        'sylvester': '../lib/sylvester/sylvester'
+        'sylvester': '../lib/sylvester/sylvester',
+        'minicolors':'../lib/minicolors/minicolors', 
+
     },
     
     shim: {
@@ -40,6 +42,9 @@ require.config({
         },
         sylvester:{
           exports:'Sylvester'
+        },
+        minicolors:{
+          exports:'Minicolors'
         }
        
     },
