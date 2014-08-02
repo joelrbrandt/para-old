@@ -10,9 +10,10 @@ define([
   'models/data/Instance',
       'models/PaperManager',
       'models/data/Condition',
+         'utils/TrigFunc'
 
 
-], function($, _, SceneNode, Instance, PaperManager,Condition) {
+], function($, _, SceneNode, Instance, PaperManager,Condition, TrigFunc) {
   var paper = PaperManager.getPaperInstance();
 
   var GeometryNode = SceneNode.extend({
@@ -55,45 +56,7 @@ define([
 
 
 
-   /* resetRelativePosition: function(){
-      var leftX=this.children[0].instances[0].position.x;
-      var topY=this.children[0].instances[0].position.y;
-      var rightX =this.children[0].instances[0].position.x+this.children[0].instances[0].width;
-      var bottomY=this.children[0].instances[0].position.y+this.children[0].instances[0].height;
-
-      for(var i=0;i<this.children.length;i++){
-        var child = this.children[i];
-          for(var j=0;j<child.instances.length;j++){
-            var instance = child.instances[j];
-            var lX = instance.position.x;
-            var tY = instance.position.y;
-            var rX = instance.position.x+instance.width;
-            var bY = instance.position.y+instance.height;
-            leftX = (lX<leftX) ? lX : leftX;
-            topY = (tY<topY) ? tY : topY;
-            rightX = (rX>rightX) ? rX : rightX;
-            bottomY = (bY>bottomY) ? bY : bottomY;   
-          }
-      }
-
-      for(var i=0;i<this.children.length;i++){
-        var child = this.children[i];
-          for(var j=0;j<child.instances.length;j++){
-            var diff = TrigFunc.subtract({x:leftX,y:topY},this.instances[i].position);
-          }
-      }
-
-      for(var i=0;i<this.instances.length;i++){
-        this.instances[i].update({
-          width:rightX-leftX,
-          height: bottomY-topY
-        });
-        var add = TrigFunc.subtract({x:leftX,y:topY},this.instances[i].position);
-        this.instances[i].increment({position:diff});
-      }
-      
-        
-    },*/
+  
 
     getLeft: function(){
       var left =this.instances[0].position.x;
@@ -385,6 +348,49 @@ define([
 
     },
 
+     getInstanceDimensions: function(){
+      //console.log("setting relative position for"+this.type); 
+      var leftX=this.instances[0].position.x;
+      var topY=this.instances[0].position.y;
+      var rightX =leftX+this.instances[0].width;
+      var bottomY=topY+this.instances[0].height;
+
+      for(var i=1;i<this.instances.length;i++){
+      
+            var instance = this.instances[i];
+            var lX = instance.position.x;
+            var tY = instance.position.y;
+            var rX = instance.position.x+instance.width;
+            var bY = instance.position.y+instance.height;
+            leftX = (lX<leftX) ? lX : leftX;
+            topY = (tY<topY) ? tY : topY;
+            rightX = (rX>rightX) ? rX : rightX;
+            bottomY = (bY>bottomY) ? bY : bottomY;   
+          }
+          return{x1:leftX,y1:topY,x2:rightX,y2:bottomY};
+         /*var newPos = {x:leftX,y:topY};
+          var width = rightX-leftX;
+          var height= bottomY-topY;
+          var posDiff = TrigFunc.subtract(data.position,newPos);
+          var dataU = data.clone();
+          dataU.update({position:newPos,width:width, height:height});
+        
+        for(var j=0;j<this.instance_literals.length;j++){
+              console.log("old instance_literal position=");
+          console.log( this.instance_literals[j].position);
+          this.instance_literals[j].increment({position:posDiff}); 
+          console.log("new instance_literal position=");
+          console.log( this.instance_literals[j].position);
+             var dot = new paper.Path.Circle(0,0,5);
+          dot.fillColor = '#00CFFF';
+          dot.transform(this.instance_literals[j].matrix);
+            this.scaffolds.push(dot);
+        }
+      return dataU;*/
+      
+
+    },
+
     /*renders geometry
      * if data is provided, creates a temporary instance array with updated values according to data
      *  otherwise just renders its children with its permanent instances
@@ -393,35 +399,75 @@ define([
      */
     render: function(data, currentNode) {
       //first create array of new instances that contain propogated updated data
-     
+      var dimensions = this.getInstanceDimensions();
+      /*if(this.children.length>0){
+        var dimensions = this.children[0].getInstanceDimensions();
+        for (var k = 1; k < this.children.length; k++) {
+          var d= this.children[k].getInstanceDimensions();
+          dimensions.leftX = (d.leftX <dimensions.leftX) ? d.leftX  : dimensions.leftX;
+          dimensions.topY = (d.topY<dimensions.topY) ? d.topY : dimensions.topY;
+          dimensions.rightX = (d.rightX >dimensions.rightX) ? d.rightX  : dimensions.rightX;
+          dimensions.bottomY = (d.bottomY >dimensions.bottomY) ? d.bottomYY :dimensions.bottomY;   
+        }}
+        else{
+          dimensions = {x1:0,y1:0,x2:0,y2:0};
+        }*/
+        console.log("dimensions of "+this.type+" =");
+        console.log(dimensions)
+
+      
 //console.log("render: "+this.type);
  if (data) {
-        for (var j = 0; j < this.instances.length; j++) {
+      console.log("found data")
           for (var i = 0; i < data.length; i++) {
-            var u_instance = this.instances[j].clone();
+          for (var j = 0; j < this.instances.length; j++) {
             this.instances[j].instanceParentIndex = i;
-            if(data[i].renderSignature){
-              u_instance.renderSignature = data[i].renderSignature.slice(0);
+            var u_instance = this.instances[j].clone();
+
+            var posDiff = TrigFunc.subtract({x:0,y:0},{x:dimensions.x1,y:dimensions.y1});
+
+            console.log("posDiff of "+this.type+" =");
+            console.log(posDiff);
+
+            u_instance.increment({position:posDiff});
+             console.log("instance position "+j+","+this.type+" =");
+            console.log(u_instance.position);
+           
+            u_data = data[i].clone();
+            u_data.increment({position:{x:dimensions.x1,y:dimensions.y1}});
+            console.log("data position "+i+","+this.nodeParent.type+" =");
+            console.log(data[i].position);
+           
+
+            if(u_data.renderSignature){
+              u_instance.renderSignature =u_data.renderSignature.slice(0);
             }
               u_instance.renderSignature.push(j);
-              u_instance.instanceParentIndex = j;
-              
-              u_instance.render(data[i]);
+              u_instance.index = j;
+              u_data.render({});
+              u_instance.render(u_data);
            
             if (this.nodeParent == currentNode) {
               u_instance.selected = this.instances[j].selected;
               u_instance.anchor = this.instances[j].anchor;
             } else {
-              u_instance.selected = data[i].selected;
-               u_instance.anchor = data[i].anchor;
+              u_instance.selected = u_data.selected;
+               u_instance.anchor = u_data.anchor;
             }
+                var dot = new paper.Path.Circle(0,0,5);
+          dot.fillColor = '#00CFFF';
+          dot.transform(u_instance.matrix);
+            this.scaffolds.push(dot);
            
             this.instance_literals.push(u_instance);
-            var dot = new paper.Path.Circle(u_instance.position.x,u_instance.position.y,5);
-                dot.fillColor = '#00CFFF';
-                this.scaffolds.push(dot);
+
+           
 
           }
+
+          
+         
+
         }
      
 
@@ -700,7 +746,7 @@ define([
         return true;
       },
 
-      checkConstraints: function(constraint, instance){
+      checkConstraints: function(constraint, Jinstance){
 
       },
 

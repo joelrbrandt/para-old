@@ -25,6 +25,7 @@ define([
 
       GeometryNode.apply(this, arguments);
       this.masterPath = null;
+      this.path_literals = [];
     },
 
 
@@ -32,7 +33,7 @@ define([
 
     },
 
-    getLiteral: function() {
+    getMasterPath: function() {
       return this.masterPath;
 
     },
@@ -65,7 +66,7 @@ define([
       this.masterPath.visible = false;
       
       path.instanceParentIndex = this.instances.length - 1;
-      path.instanceIndex = this.instance_literals.length - 1;
+      path.instanceIndex = this.path_literals.length - 1;
       path.nodeParent = this;
       return instance;
 
@@ -76,7 +77,7 @@ define([
     /*sets focus to this instance and unfocuses all siblings*/
     focus: function() {
 
-      this.instance_literals[0].strokeColor = 'black';
+      this.path_literals[0].strokeColor = 'black';
 
       var siblings = this.getSiblings();
       for (var i = 0; i < siblings.length; i++) {
@@ -86,17 +87,17 @@ define([
 
     /* unfocuses this by setting  stroke color to grey */
     unfocus: function() {
-      this.instance_literals[0].strokeColor = 'grey';
+      this.path_literals[0].strokeColor = 'grey';
     },
 
     /*clears out all but first of literal paths*/
     clear: function() {
-      this.clearScaffolds();
-      for (var j = 0; j < this.instance_literals.length; j++) {
-        this.instance_literals[j].remove();
+     GeometryNode.prototype.clear.apply(this, arguments);
+      for (var j = 0; j < this.path_literals.length; j++) {
+        this.path_literals[j].remove();
 
       }
-      this.instance_literals = [];
+      this.path_literals = [];
 
     },
 
@@ -114,8 +115,8 @@ define([
        var diff = TrigFunc.subtract({x:topLeftNew.x,y:topLeftNew.y},{x:topLeftOld.x,y:topLeftOld.y});
 
        //set position to upper left corner
-       newPath.position.x = 0+newPath.bounds.width/2
-       newPath.position.y =0+newPath.bounds.height/2
+       newPath.position.x = 0+newPath.bounds.width/2;
+       newPath.position.y =0+newPath.bounds.height/2;
 
         for(var i=0;i<this.instances.length;i++){
           this.instances[i].update({width:newPath.bounds.width,height:newPath.bounds.height});
@@ -138,88 +139,89 @@ define([
      *index of the instance used to render the path
      */
     render: function(data, currentNode) {
-      var path_literal = this.getLiteral();
-     // console.log("render: "+this.type);
-      if (data) {
-        for (var k = 0; k < this.instances.length; k++) {
-
-          for (var d = 0; d < data.length; d++) {
-            this.instances[k].instanceParentIndex = d;
-
-            var instance_literal = path_literal.clone();
-            instance_literal.nodeParent = this;
-            instance_literal.instanceParentIndex = k;
-            instance_literal.data.renderSignature = data[d].renderSignature.slice(0);
-            instance_literal.data.renderSignature.push(k);
-            var nInstance = this.instances[k];
-            nInstance.render(data[d]);
-            instance_literal.transform(nInstance.matrix);
-            instance_literal.strokeColor = this.instances[k].strokeColor;
-            console.log("stroke ="+this.instances[k].strokeColor);
-            if (instance_literal.closed) {
-              instance_literal.fillColor = this.instances[k].fillColor;
+       var master = this.getMasterPath();
+     if(data){
+       GeometryNode.prototype.render.apply(this, arguments);
+     
+     // console.log('render: '+this.type);
+    
+      for (var k = 0; k < this.instance_literals.length; k++) {
+            var instance_literal = this.instance_literals[k];
+            var path_literal = master.clone();
+            path_literal.nodeParent = this;
+            path_literal.data.index = k;
+            path_literal.instanceParentIndex =instance_literal.instanceParentIndex;
+          
+            path_literal.transform(instance_literal.matrix);
+            path_literal.strokeColor = instance_literal.strokeColor;
+            if (path_literal.closed) {
+              path_literal.fillColor = instance_literal.fillColor;
             }
-            instance_literal.strokeWidth = this.instances[k].strokeWidth + data[d].strokeWidth;
-            if (instance_literal.strokeWidth === 0) {
-              instance_literal.strokeWidth = 1;
+            if (path_literal.strokeWidth === 0) {
+              path_literal.strokeWidth = 1;
             }
 
             if (this.nodeParent == currentNode) {
-              instance_literal.selected = this.instances[k].selected;
+              path_literal.selected = instance_literal.selected;
           
-              if (this.instances[k].anchor) {
-                if (k === 0) {
-                  instance_literal.strokeColor = '#83E779';
+              if (instance_literal.anchor) {
+                if (instance_literal.index === 0) {
+                  path_literal.strokeColor = '#83E779';
                 } else {
-                  instance_literal.strokeColor = '#FF0000';
+                  path_literal.strokeColor = '#FF0000';
 
                 }
-                if (instance_literal.strokeWidth < 3) {
-                  instance_literal.strokeWidth = 3;
+                if (path_literal.strokeWidth < 3) {
+                  path_literal.strokeWidth = 3;
                 }
               }
             } else {
-              instance_literal.selected = data[d].selected;
-              if (data[d].anchor) {
-                instance_literal.strokeColor = '#83E779';
-                if (instance_literal.strokeWidth < 3) {
-                  instance_literal.strokeWidth = 3;
+              path_literal.selected = data[instance_literal.instanceParentIndex].selected;
+              if (data[instance_literal.instanceParentIndex].anchor) {
+                if (data[instance_literal.instanceParentIndex].index === 0) {
+                  path_literal.strokeColor = '#83E779';
+                } else {
+                  path_literal.strokeColor = '#FF0000';
+
+                }
+                if (path_literal.strokeWidth < 3) {
+                  path_literal.strokeWidth = 3;
                 }
               }
             }
 
 
-            instance_literal.visible = this.instances[k].visible;
+            path_literal.visible = instance_literal.visible;
 
            /* if (this.nodeParent != currentNode && this.follow) {
-              instance_literal.visible=false;
+              path_literal.visible=false;
             }*/
-            this.instance_literals.push(instance_literal);
-            instance_literal.instanceIndex = this.instance_literals.length - 1;
+            this.path_literals.push(path_literal);
+            path_literal.instanceIndex = this.path_literals.length - 1;
             //console.log('path matrix');
-            //console.log(instance_literal.matrix);
+            //console.log(path_literal.matrix);
             /*var dot = new paper.Path.Circle(this.instances[k].position.x+data[d].position.x,this.instances[k].position.y+data[d].position.y,5);
                 dot.fillColor = 'green';
                 this.scaffolds.push(dot);*/
           }
-        }
+        
       } else {
         for (var z = 0; z < this.instances.length; z++) {
 
-          var instance_literal = path_literal.clone();
-          instance_literal.nodeParent = this;
-          instance_literal.instanceParentIndex = z;
+          var path_literal = master.clone();
+          path_literal.nodeParent = this;
+          path_literal.instanceParentIndex = z;
 
         var nInstance = this.instances[z];
           nInstance.render({});
-          instance_literal.transform(nInstance.matrix);
-          instance_literal.rotate(this.instances[z].rotation);
-          instance_literal.scale(this.instances[z].scale);
-          instance_literal.visible = this.instances[z].visible;
-          instance_literal.data.renderSignature = [];
-          instance_literal.data.renderSignature.push(z);
-          this.instance_literals.push(instance_literal);
-          instance_literal.instanceIndex = this.instance_literals.length - 1;
+          path_literal.transform(nInstance.matrix);
+          path_literal.rotate(this.instances[z].rotation);
+          path_literal.scale(this.instances[z].scale);
+          path_literal.visible = this.instances[z].visible;
+          path_literal.data.renderSignature = [];
+          path_literal.data.renderSignature.push(z);
+          this.path_literals.push(path_literal);
+          path_literal.instanceIndex = this.path_literals.length - 1;
         }
       }
 
@@ -227,11 +229,11 @@ define([
 
 
 
-    //checks to see if path exists in path_literals array
+    //checks to see if path exists in masters array
     containsPath: function(path) {
-      for (var i = 0; i < this.instance_literals.length; i++) {
-        if (this.instance_literals[i].equals(path)) {
-          console.log("contains path found");
+      for (var i = 0; i < this.path_literals.length; i++) {
+        if (this.path_literals[i].equals(path)) {
+          console.log('contains path found');
           return true;
         }
       }
@@ -251,13 +253,13 @@ define([
       if (this.containsPath(path)) {
 
         for (var i = 0; i < this.instance_literals.length; i++) {
-          var compareSig = this.instance_literals[i].data.renderSignature.slice(0, index + 1);
+          var compareSig = this.instance_literals[i].renderSignature.slice(0, index + 1);
           compareSig = compareSig.join();
           if (compareSig === value) {
-            var last = this.instance_literals[i].data.renderSignature.length - 1;
-            var iIndex = this.instance_literals[i].data.renderSignature[last];
+            var last = this.instance_literals[i].renderSignature.length - 1;
+            var iIndex = this.instance_literals[i].renderSignature[last];
             this.instances[iIndex].selected = true;
-            var copySig = this.instance_literals[i].data.renderSignature.slice(0);
+            var copySig = this.instance_literals[i].renderSignature.slice(0);
 
             copySig.pop();
             if (copySig.length > 0) {
@@ -276,9 +278,9 @@ define([
         this.children[i].deleteNode();
         this.removeChildAt(i);
       }
-      for (var i = 0; i < this.instance_literals.length; i++) {
-        this.instance_literals[i].remove();
-        this.instance_literals[i] = null;
+      for (var i = 0; i < this.path_literals.length; i++) {
+        this.path_literals[i].remove();
+        this.path_literals[i] = null;
       }
       this.nodeParent.removeChildNode(this);
     },
@@ -287,15 +289,15 @@ define([
 
     //selects or deselects all path instances
     selectAll: function() {
-      for (var i = 0; i < this.instance_literals.length; i++) {
-        this.instance_literals[i].selected = true;
+      for (var i = 0; i < this.path_literals.length; i++) {
+        this.path_literals[i].selected = true;
       }
 
     },
 
     deselectAll: function() {
-      for (var i = 0; i < this.instance_literals.length; i++) {
-        this.instance_literals[i].selected = false;
+      for (var i = 0; i < this.path_literals.length; i++) {
+        this.path_literals[i].selected = false;
       }
       for (var j = 0; j < this.instances.length; j++) {
         this.instances[j].selected = false;
@@ -328,15 +330,15 @@ define([
 
 
         } else {
-          var path_literal = this.instance_literals[i + 1];
+          var master = this.path_literals[i + 1];
         
           pA = {
-            x: path_literal.segments[0].point.x,
-            y: path_literal.segments[0].point.y
+            x: master.segments[0].point.x,
+            y: master.segments[0].point.y
           };
           pB = {
-            x: path_literal.segments[path_literal.segments.length - 1].point.x,
-            y: path_literal.segments[path_literal.segments.length - 1].point.y
+            x: master.segments[master.segments.length - 1].point.x,
+            y: master.segments[master.segments.length - 1].point.y
           };
 
         }
@@ -350,8 +352,8 @@ define([
 
     //checks for intersection and returns the first path found
     checkIntersection: function() {
-      for (var i = 1; i < this.instance_literals.length; i++) {
-        var instance_literal = this.instance_literals[i];
+      for (var i = 1; i < this.path_literals.length; i++) {
+        var path_literal = this.path_literals[i];
         var paths = paper.project.activeLayer.children;
         for (var j = 0; j < paths.length; j++) {
 
@@ -359,7 +361,7 @@ define([
             if (paths[j].nodeParent) {
               if (paths[j].nodeParent.nodeParent === this.nodeParent && this.nodeParent.type === 'behavior') {
               } else {
-                var ints = paths[j].getIntersections(instance_literal);
+                var ints = paths[j].getIntersections(path_literal);
                 if (ints.length > 0) {
                   return paths[j];
                 }

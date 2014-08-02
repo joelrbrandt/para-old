@@ -115,7 +115,7 @@ define([
       if (this.currentPaths.length > 0) {
         if (segment !== null) {
           if (this.currentNode) {
-            var selPath = this.selectedNodes[this.selectedNodes.length - 1].instance_literals[instanceIndex];
+            var selPath = this.selectedNodes[this.selectedNodes.length - 1].path_literals[instanceIndex];
             if (selPath) {
               var selSegment = selPath.segments[segment];
               //selSegment.point = selSegment.point.add(event.delta);
