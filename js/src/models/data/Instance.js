@@ -265,6 +265,10 @@ define([
 			newInstance.strokeColor = this.strokeColor;
 			newInstance.fillColor = this.fillColor;
 			newInstance.matrix = this.matrix.clone();
+			newInstance.index = this.index
+			newInstance.instanceParentIndex = this.instanceParentIndex;
+			newInstance.renderSignature= this.renderSignature.slice();
+
 			return newInstance;
 
 		}

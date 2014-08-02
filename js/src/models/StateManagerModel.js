@@ -155,9 +155,11 @@ this.event_bus = event_bus;
    setSelection: function(path){
    
       var index  = currentNode.getLevelInTree(rootNode,0);
-     console.log(path.data.renderSignature);
-      if(path.data.renderSignature[index]!==null){
-        var value = path.data.renderSignature.slice(0,index+1);
+      var pathIndex = path.data.index;
+      var renderSig = path.nodeParent.instance_literals[pathIndex].renderSignature;
+     console.log(renderSig);
+      if( renderSig!==null){
+        var value =  renderSig.slice(0,index+1);
         value = value.join();
 
         currentNode.selectByValue(index,value, path, currentNode);
@@ -317,7 +319,6 @@ this.event_bus = event_bus;
     },
 
      updateColor: function(color,type){
-      console.log("update color");
       if(selectTool.selectedNodes.length>0){
         
         var update;
