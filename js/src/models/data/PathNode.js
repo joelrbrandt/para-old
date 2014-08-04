@@ -131,6 +131,37 @@ define([
 
     },
 
+    getInstanceDimensions: function() {
+      //console.log('setting relative position for'+this.type); 
+      var leftX = this.instances[0].position.x;
+      var topY = this.instances[0].position.y;
+      var rightX = leftX + this.instances[0].width;
+      var bottomY = topY + this.instances[0].height;
+
+      for (var i = 1; i < this.instances.length; i++) {
+
+        var instance = this.instances[i];
+        var lX = instance.position.x;
+        var tY = instance.position.y;
+        var rX = instance.position.x + instance.width;
+        var bY = instance.position.y + instance.height;
+        leftX = (lX < leftX) ? lX : leftX;
+        topY = (tY < topY) ? tY : topY;
+        rightX = (rX > rightX) ? rX : rightX;
+        bottomY = (bY > bottomY) ? bY : bottomY;
+      }
+
+      return {
+        x1: leftX,
+        y1: topY,
+        x2: rightX,
+        y2: bottomY,
+        width: rightX-leftX,
+        height: bottomY-topY
+      };
+     
+    },
+
 
     /* renders instances of the original path
      * render data contains an array of objects containing

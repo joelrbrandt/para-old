@@ -42,6 +42,7 @@ define([
 			this.index = null;
 			//array that contains the path of inheritance from a render;
 			this.renderSignature = [];
+			this.dimensions={x1:0,y1:0,x2:0,y2:0};
 			Backbone.Model.apply(this, arguments);
 			this.matrix = new paper.Matrix();
 					 },
