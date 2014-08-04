@@ -133,14 +133,14 @@ define([
 
     getInstanceDimensions: function() {
       //console.log('setting relative position for'+this.type); 
-      var leftX = this.instances[0].position.x;
-      var topY = this.instances[0].position.y;
-      var rightX = leftX + this.instances[0].width;
-      var bottomY = topY + this.instances[0].height;
+      var leftX = this.instance_literals[0].position.x;
+      var topY = this.instance_literals[0].position.y;
+      var rightX = leftX + this.instance_literals[0].width;
+      var bottomY = topY + this.instance_literals[0].height;
 
-      for (var i = 1; i < this.instances.length; i++) {
+      for (var i = 1; i < this.instance_literals.length; i++) {
 
-        var instance = this.instances[i];
+        var instance = this.instance_literals[i];
         var lX = instance.position.x;
         var tY = instance.position.y;
         var rX = instance.position.x + instance.width;
