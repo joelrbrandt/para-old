@@ -8,19 +8,19 @@ define([
   'underscore',
   'models/data/SceneNode',
   'models/data/Instance',
-      'models/PaperManager',
-      'models/data/Condition',
-         'utils/TrigFunc'
+  'models/PaperManager',
+  'models/data/Condition',
+  'utils/TrigFunc'
 
 
-], function($, _, SceneNode, Instance, PaperManager,Condition, TrigFunc) {
+], function($, _, SceneNode, Instance, PaperManager, Condition, TrigFunc) {
   var paper = PaperManager.getPaperInstance();
 
   var GeometryNode = SceneNode.extend({
 
 
     type: 'geometry',
-   
+
     constructor: function() {
       /* instances contain objects that provide geometric info
     * this is propogated down to the leaves of the tree to 
@@ -35,9 +35,10 @@ define([
       this.instances = [];
       this.scaffolds = [];
       this.instance_literals = [];
+      this.dimensioned_instances = [];
       this.behaviors = [];
-      this.follow= false;
-      this.conditions= [];
+      this.follow = false;
+      this.conditions = [];
 
 
 
@@ -50,151 +51,147 @@ define([
       this.createInstance();
     },
 
-    addChildNode: function(node){
-     SceneNode.prototype.addChildNode.apply(this, arguments);
+    addChildNode: function(node) {
+      SceneNode.prototype.addChildNode.apply(this, arguments);
     },
 
 
 
-  
-
-    getLeft: function(){
-      var left =this.instances[0].position.x;
-      for(var i=1;i<this.instances.length;i++){
+    getLeft: function() {
+      var left = this.instances[0].position.x;
+      for (var i = 1; i < this.instances.length; i++) {
         var l = this.instances[i].position.x;
-        if(l<left){
+        if (l < left) {
           left = l;
         }
       }
       return left;
     },
 
-    getRight: function(){
-      var right =this.instances[0].position.x;
-      for(var i=1;i<this.instances.length; i++){
+    getRight: function() {
+      var right = this.instances[0].position.x;
+      for (var i = 1; i < this.instances.length; i++) {
         var r = this.instances[i].position.x;
-        if(r>right){
-          right=r;
+        if (r > right) {
+          right = r;
         }
       }
       return right;
     },
 
-    getTop: function(){
-      var top =this.instances[0].position.y;
-      for(var i=1;i<this.instances.length; i++){
+    getTop: function() {
+      var top = this.instances[0].position.y;
+      for (var i = 1; i < this.instances.length; i++) {
         var r = this.instances[i].position.y;
-        if(r<top){
-          top=r;
+        if (r < top) {
+          top = r;
         }
       }
       return top;
     },
 
-    getBottom: function(){
-         var bottom =this.instances[0].position.y;
-      for(var i=1;i<this.instances.length; i++){
+    getBottom: function() {
+      var bottom = this.instances[0].position.y;
+      for (var i = 1; i < this.instances.length; i++) {
         var r = this.instances[i].position.y;
-        if(r>bottom){
-          bottom=r;
+        if (r > bottom) {
+          bottom = r;
         }
       }
       return bottom;
     },
 
-    getChildrenLeft: function(){
-      if(this.children.length>0){
-      var left =this.children[0].getLeft();
-      for(var i=1;i<this.children.length;i++){
-        var l = this.children[i].getLeft();
-        if(l<left){
-          left = l;
+    getChildrenLeft: function() {
+      if (this.children.length > 0) {
+        var left = this.children[0].getLeft();
+        for (var i = 1; i < this.children.length; i++) {
+          var l = this.children[i].getLeft();
+          if (l < left) {
+            left = l;
+          }
         }
+        return left;
+      } else {
+        return 0;
       }
-      return left;
-    }else{
-      return 0;
-    }
     },
 
-    getChildrenRight: function(){
-     if(this.children.length>0){
-      var right =this.children[0].getRight();
-      for(var i=1;i<this.children.length; i++){
-        var r = this.children[i].getRight();
-        if(r<right){
-          right=r;
+    getChildrenRight: function() {
+      if (this.children.length > 0) {
+        var right = this.children[0].getRight();
+        for (var i = 1; i < this.children.length; i++) {
+          var r = this.children[i].getRight();
+          if (r < right) {
+            right = r;
+          }
         }
+        return right;
+      } else {
+        return 0;
       }
-      return right;
-    }
-    else{
-      return 0;
-    }
     },
 
-    getChildrenTop: function(){
-     if(this.children.length>0){
+    getChildrenTop: function() {
+      if (this.children.length > 0) {
 
-      var top =this.children[0].getTop();
-      for(var i=1;i<this.children.length; i++){
-        var r = this.children[i].getTop();
-        if(r<top){
-          top=r;
+        var top = this.children[0].getTop();
+        for (var i = 1; i < this.children.length; i++) {
+          var r = this.children[i].getTop();
+          if (r < top) {
+            top = r;
+          }
         }
+        return top;
+      } else {
+        return 0;
       }
-      return top;}
-      else{
-      return 0;
-    }
     },
 
-    getChildrenBottom: function(){
-      if(this.children.length>0){
-         var bottom =this.children[0].getBottom();
-      for(var i=1;i<this.children.length; i++){
-        var r = this.children[i].getBottom();
-        if(r<bottom){
-          bottom=r;
+    getChildrenBottom: function() {
+      if (this.children.length > 0) {
+        var bottom = this.children[0].getBottom();
+        for (var i = 1; i < this.children.length; i++) {
+          var r = this.children[i].getBottom();
+          if (r < bottom) {
+            bottom = r;
+          }
         }
+        return bottom;
+      } else {
+        return 0;
       }
-      return bottom;
-    }
-    else{
-      return 0;
-    }
     },
 
 
-    exportJSON: function(){
+    exportJSON: function() {
       this.set({
-       type: this.type
+        type: this.type
       });
-       var data = this.toJSON();
-       var jInstances = [];
-       var children = [];
-        var lInstances = [];
-       var behaviors = [];
-       for(var i=0;i<this.instances.length;i++){
-       
+      var data = this.toJSON();
+      var jInstances = [];
+      var children = [];
+      var lInstances = [];
+      var behaviors = [];
+      for (var i = 0; i < this.instances.length; i++) {
+
         jInstances.push(this.instances[i].exportJSON());
-       }
-       for(var j=0;j<this.instance_literals.length;j++){
+      }
+      for (var j = 0; j < this.instance_literals.length; j++) {
         lInstances.push(this.instance_literals[j].exportJSON());
-       }
-       for(var k=0;k<this.children.length;k++){
-       
+      }
+      for (var k = 0; k < this.children.length; k++) {
+
         children.push(this.children[k].exportJSON());
-       }
-       for(var m=0;m<this.behaviors.length;m++){
-          //behaviors.push(this.behaviors[i].exportJSON());
-       }
-       data.instances  = jInstances;
-        data.instance_literals  = lInstances;
-         data.children  = children;
-         data.behaviors = behaviors;
+      }
+      for (var m = 0; m < this.behaviors.length; m++) {
+        //behaviors.push(this.behaviors[i].exportJSON());
+      }
+      data.instances = jInstances;
+      data.instance_literals = lInstances;
+      data.children = children;
+      data.behaviors = behaviors;
       // console.log(JSON.stringify(data));
-       return data;
+      return data;
     },
 
 
@@ -209,38 +206,38 @@ define([
       } else {
         instance = new Instance();
       }
-      instance.nodeParent=this;
+      instance.nodeParent = this;
       this.instances.push(instance);
-      instance.index = this.instances.length-1;
+      instance.index = this.instances.length - 1;
       return instance;
 
     },
 
-    createInstanceAt: function(data,index){
-        var instance;
+    createInstanceAt: function(data, index) {
+      var instance;
       if (data) {
         instance = data.clone();
-       
+
       } else {
         instance = new Instance();
       }
-      instance.nodeParent=this;
+      instance.nodeParent = this;
       instance.anchor = false;
-      this.instances.splice(index,0,instance);
-       for(var i=0;i<this.instances.length;i++){
-        this.instances[i].index =i;
-       }
+      this.instances.splice(index, 0, instance);
+      for (var i = 0; i < this.instances.length; i++) {
+        this.instances[i].index = i;
+      }
       return instance;
     },
 
-    removeInstanceAt: function(index){
-      this.instances.splice(index,1);
+    removeInstanceAt: function(index) {
+      this.instances.splice(index, 1);
     },
 
-    getInstancesofParent: function(index){
+    getInstancesofParent: function(index) {
       var iInstances = [];
-      for(var i=0;i<this.instances.length;i++){
-        if(this.instances[i].instanceParentIndex===index){
+      for (var i = 0; i < this.instances.length; i++) {
+        if (this.instances[i].instanceParentIndex === index) {
           iInstances.push(this.instances[i]);
         }
       }
@@ -250,7 +247,7 @@ define([
 
     //updates instances according to data and the passes the updated instances to child function
     update: function(data) {
-      //console.log("geom update: "+ this.type);
+      //console.log('geom update: '+ this.type);
       var parentType = '';
       if (this.nodeParent) {
         parentType = this.nodeParent.type;
@@ -258,17 +255,15 @@ define([
       for (var j = 0; j < this.instances.length; j++) {
         for (var i = 0; i < data.length; i++) {
           var instance = this.instances[j];
-         instance.update(data[i]);
-        
+          instance.update(data[i]);
+
         }
       }
-     
-      for (var k = 0; k <this.children.length; k++) {
-          this.children[k].update([{}]);
-        }
-  
-     
-      
+
+      for (var k = 0; k < this.children.length; k++) {
+        this.children[k].update([{}]);
+      }
+
 
 
     },
@@ -290,7 +285,7 @@ define([
           for (var i = 0; i < data.length; i++) {
             var instance = this.instances[j];
             instance.increment(data[i]);
-        
+
           }
         }
       }
@@ -299,7 +294,7 @@ define([
 
     },
 
-  
+
     reset: function() {
       for (var j = 0; j < this.instances.length; j++) {
         this.instances[j].reset();
@@ -327,9 +322,9 @@ define([
     },
 
     /*shows or hides all instances*/
-    setVisible: function(v){
-      for(var j=0;j<this.instances.length;j++){
-        this.instances[j].visible=v;
+    setVisible: function(v) {
+      for (var j = 0; j < this.instances.length; j++) {
+        this.instances[j].visible = v;
       }
 
       for (var i = 0; i < this.children.length; i++) {
@@ -341,54 +336,28 @@ define([
     clear: function() {
       this.instance_literals = [];
       this.clearScaffolds();
-      
+      this.dInstances = [];
       for (var i = 0; i < this.children.length; i++) {
         this.children[i].clear();
       }
 
     },
 
-     getInstanceDimensions: function(){
-      //console.log("setting relative position for"+this.type); 
-      var leftX=this.instances[0].position.x;
-      var topY=this.instances[0].position.y;
-      var rightX =leftX+this.instances[0].width;
-      var bottomY=topY+this.instances[0].height;
-
-      for(var i=1;i<this.instances.length;i++){
-      
-            var instance = this.instances[i];
-            var lX = instance.position.x;
-            var tY = instance.position.y;
-            var rX = instance.position.x+instance.width;
-            var bY = instance.position.y+instance.height;
-            leftX = (lX<leftX) ? lX : leftX;
-            topY = (tY<topY) ? tY : topY;
-            rightX = (rX>rightX) ? rX : rightX;
-            bottomY = (bY>bottomY) ? bY : bottomY;   
-          }
-          return{x1:leftX,y1:topY,x2:rightX,y2:bottomY};
-         /*var newPos = {x:leftX,y:topY};
-          var width = rightX-leftX;
-          var height= bottomY-topY;
-          var posDiff = TrigFunc.subtract(data.position,newPos);
-          var dataU = data.clone();
-          dataU.update({position:newPos,width:width, height:height});
-        
-        for(var j=0;j<this.instance_literals.length;j++){
-              console.log("old instance_literal position=");
-          console.log( this.instance_literals[j].position);
-          this.instance_literals[j].increment({position:posDiff}); 
-          console.log("new instance_literal position=");
-          console.log( this.instance_literals[j].position);
-             var dot = new paper.Path.Circle(0,0,5);
-          dot.fillColor = '#00CFFF';
-          dot.transform(this.instance_literals[j].matrix);
-            this.scaffolds.push(dot);
+    getInstanceDimensions: function() {
+      //console.log('setting relative position for'+this.type); 
+      if(this.children.length>0){
+        var childDimensions = [];
+        for (var k = 0; k < this.children.length; k++) {
+          childDimensions.push(this.children[k].getInstanceDimensions());
         }
-      return dataU;*/
-      
+        console.log("num child dimensions "+childDimensions.length);
+        var masterDimensions = TrigFunc.masterDimension(childDimensions);
+        console.log("masterDimensions=");
+        console.log(masterDimensions)
+        return masterDimensions;
+      }
 
+     
     },
 
     /*renders geometry
@@ -397,79 +366,131 @@ define([
      * copies the render signature from the data and concats it with the
      *index of the instance used to render the path
      */
+
+
+   /* setDimensions: function(){
+      var childDimensions = [];
+        var masterDimension;
+        if(this.children.length<0){
+          for (var f = 0; f < this.children.length; f++) {
+            var dimensions = this.children[f].setDimensions();
+            childDimensions.push(dimensions);
+          }
+        
+        
+        masterDimension = TrigFunc.masterDimension(childDimensions);
+        
+      }
+      else{
+        masterDimension= this.getInstanceDimensions();
+      }
+      for(var i=0;i<this.instances.length;i++){
+          var dInstance = this.instances[i].clone();
+          if(this.children.length<0){
+            dInstance.width = masterDimension.width;
+            dInstance.height = masterDimension.height;
+            dInstance.increment({position:{x:masterDimension.x1,y:masterDimension.y1}});
+          }
+            dInstance.dimensions= masterDimension;
+          this.dimensioned_instances.push(dInstance);
+        }
+      return masterDimension;
+    },*/
+
+
     render: function(data, currentNode) {
       //first create array of new instances that contain propogated updated data
-      var dimensions = this.getInstanceDimensions();
-      /*if(this.children.length>0){
-        var dimensions = this.children[0].getInstanceDimensions();
-        for (var k = 1; k < this.children.length; k++) {
-          var d= this.children[k].getInstanceDimensions();
-          dimensions.leftX = (d.leftX <dimensions.leftX) ? d.leftX  : dimensions.leftX;
-          dimensions.topY = (d.topY<dimensions.topY) ? d.topY : dimensions.topY;
-          dimensions.rightX = (d.rightX >dimensions.rightX) ? d.rightX  : dimensions.rightX;
-          dimensions.bottomY = (d.bottomY >dimensions.bottomY) ? d.bottomYY :dimensions.bottomY;   
-        }}
-        else{
-          dimensions = {x1:0,y1:0,x2:0,y2:0};
-        }*/
-        console.log("dimensions of "+this.type+" =");
-        console.log(dimensions)
 
+     
+
+
+      //console.log('render: '+this.type);
+      if (data) {
+        //console.log('found data');
+
+       
+       
+        var dimensions = this.getInstanceDimensions();
+        if(this.children.length<1){
+          dimensions = {x1:0,y1:0,x2:0,y2:0};
+        }
       
-//console.log("render: "+this.type);
- if (data) {
-      console.log("found data")
-          for (var i = 0; i < data.length; i++) {
+        //console.log('dimensions of ' + this.type + ' =');
+        //console.log(dimensions);
+
+        for (var i = 0; i < data.length; i++) {
           for (var j = 0; j < this.instances.length; j++) {
             this.instances[j].instanceParentIndex = i;
             var u_instance = this.instances[j].clone();
 
-            var posDiff = TrigFunc.subtract({x:0,y:0},{x:dimensions.x1,y:dimensions.y1});
+            var posDiff = TrigFunc.subtract({
+              x: 0,
+              y: 0
+            }, {
+              x: data[i].position.x,
+              y: data[i].position.y,
+            });
 
-            console.log("posDiff of "+this.type+" =");
+            /*console.log('posDiff of ' + this.type + ' =');
             console.log(posDiff);
-
-            u_instance.increment({position:posDiff});
-             console.log("instance position "+j+","+this.type+" =");
+            
+            u_instance.increment({
+              position: posDiff
+            });
+            /*console.log('instance position ' + j + ',' + this.type + ' =');
+            console.log(u_instance.position);*/
+            console.log('instance position before increment ' + j + ',' + this.type + ' =');
             console.log(u_instance.position);
-           
-            u_data = data[i].clone();
-            u_data.increment({position:{x:dimensions.x1,y:dimensions.y1}});
-            console.log("data position "+i+","+this.nodeParent.type+" =");
-            console.log(data[i].position);
-           
+            u_instance.dimensions = dimensions
+          
+            u_instance.increment({position:{x:dimensions.x1,y:dimensions.y1}});
+            u_instance.position.x=  u_instance.position.x-data[i].dimensions.x1;
+            u_instance.position.y=  u_instance.position.y-data[i].dimensions.y1;
 
-            if(u_data.renderSignature){
-              u_instance.renderSignature =u_data.renderSignature.slice(0);
+            console.log('instance position after increment ' + j + ',' + this.type + ' =');
+            console.log(u_instance.position);
+         
+
+            if (data[i].renderSignature) {
+              u_instance.renderSignature = data[i].renderSignature.slice(0);
             }
-              u_instance.renderSignature.push(j);
-              u_instance.index = j;
-              u_data.render({});
-              u_instance.render(u_data);
-           
+            u_instance.renderSignature.push(j);
+            u_instance.index = j;
+            
+            u_instance.render(data[i]);
+
             if (this.nodeParent == currentNode) {
               u_instance.selected = this.instances[j].selected;
               u_instance.anchor = this.instances[j].anchor;
             } else {
-              u_instance.selected = u_data.selected;
-               u_instance.anchor = u_data.anchor;
+              u_instance.selected = data[i].selected;
+              u_instance.anchor = data[i].anchor;
             }
-                var dot = new paper.Path.Circle(0,0,5);
-          dot.fillColor = '#00CFFF';
-          dot.transform(u_instance.matrix);
+
+            var dot = new paper.Path.Circle(0, 0, 5);
+            if (this.type === 'path') {
+              dot.fillColor = '#00CFFF';
+            } else if (this.type === 'behavior') {
+              dot.fillColor = '#FF0000';
+            } else {
+              dot.fillColor = '#00ff00';
+            }
+            dot.transform(u_instance.matrix);
             this.scaffolds.push(dot);
-           
+            var rect = new paper.Path.Rectangle(0,0,dimensions.x2-dimensions.x1,dimensions.y2-dimensions.y1)
+            rect.strokeColor='red';
+            rect.transform(u_instance.matrix);
+            this.scaffolds.push(rect);
             this.instance_literals.push(u_instance);
 
-           
+
 
           }
 
-          
-         
+
 
         }
-     
+
 
 
         for (var k = 0; k < this.children.length; k++) {
@@ -477,10 +498,11 @@ define([
           this.children[k].render(this.instance_literals, currentNode);
         }
       } else {
-
-        for (var f= 0; f< this.instances.length; f++) {
+       // console.log('no data');
+        for (var f = 0; f < this.instances.length; f++) {
           this.instances[f].render({});
         }
+
         for (var f = 0; f < this.children.length; f++) {
 
           this.children[f].render(this.instances, currentNode);
@@ -500,9 +522,9 @@ define([
       }
     },
 
-    
-    deleteNode: function(){
-      for(var i=this.children.length-1;i>-1;i--){
+
+    deleteNode: function() {
+      for (var i = this.children.length - 1; i > -1; i--) {
         this.children[i].deleteNode();
       }
       this.clear();
@@ -515,7 +537,7 @@ define([
       for (var i = 0; i < this.children.length; i++) {
         if (this.children[i].containsPath(path)) {
           var results = this.children[i].selectByValue(index, value, path, currentNode);
-       
+
           if (this != currentNode) {
             for (var j = 0; j < results.length; j++) {
               if (results[j].length > 0) {
@@ -558,11 +580,14 @@ define([
     },
 
     //returns first selected instance
-    getFirstSelectedInstance: function(){
-      for(var i=0;i<this.instances.length;i++){
-          if(this.instances[i].selected){
-            return {instance:this.instances[i],index:i};
-          }
+    getFirstSelectedInstance: function() {
+      for (var i = 0; i < this.instances.length; i++) {
+        if (this.instances[i].selected) {
+          return {
+            instance: this.instances[i],
+            index: i
+          };
+        }
       }
       return null;
 
@@ -595,8 +620,8 @@ define([
     },
 
     //returns first behavior that matches name
-    getBehaviorByName: function(name){
-       for (var i = 0; i < this.behaviors.length; i++) {
+    getBehaviorByName: function(name) {
+      for (var i = 0; i < this.behaviors.length; i++) {
         if (this.behaviors[i].name === name) {
           return this.behaviors[i];
         }
@@ -621,137 +646,132 @@ define([
     },
 
     /* placeholder functions for leftOf, rightOf geometric checks */
-    instanceSide: function(instance){
+    instanceSide: function(instance) {
       return -1;
     },
 
-    checkIntersection: function(){
-      for (var i=0;i<this.children.length;i++){
+    checkIntersection: function() {
+      for (var i = 0; i < this.children.length; i++) {
         var intersection = this.children[i].checkIntersection();
-        if(intersection!==null){
+        if (intersection !== null) {
           return intersection;
 
         }
       }
     },
 
-      clearScaffolds: function() {
-        for (var j = 0; j < this.scaffolds.length; j++) {
-          this.scaffolds[j].remove();
+    clearScaffolds: function() {
+      for (var j = 0; j < this.scaffolds.length; j++) {
+        this.scaffolds[j].remove();
 
-        }
-        this.scaffolds = [];
+      }
+      this.scaffolds = [];
 
-      },
+    },
 
-//registers overriding function for overriding methods- determined by parent node- this calls new method first
-      extendBehaviorFirst: function(from, methods) {
-        if (!this.containsBehaviorName(from.name)) {
-          this.behaviors.push(from);
-          // if the method is defined on from ...
-          // we add those methods which exists on `from` but not on `to` to the latter
-          _.defaults(this, from);
-          // … and we do the same for events
-          _.defaults(this.events, from.events);
-          // console.log(this);
-          // console.log(from);
-          for (var i = 0; i < methods.length; i++) {
-            var methodName = methods;
-            if (!_.isUndefined(from[methodName])) {
-              // console.log('setting methods');
-              var old = this[methodName];
+    //registers overriding function for overriding methods- determined by parent node- this calls new method first
+    extendBehaviorFirst: function(from, methods) {
+      if (!this.containsBehaviorName(from.name)) {
+        this.behaviors.push(from);
+        // if the method is defined on from ...
+        // we add those methods which exists on `from` but not on `to` to the latter
+        _.defaults(this, from);
+        // … and we do the same for events
+        _.defaults(this.events, from.events);
+        // console.log(this);
+        // console.log(from);
+        for (var i = 0; i < methods.length; i++) {
+          var methodName = methods;
+          if (!_.isUndefined(from[methodName])) {
+            // console.log('setting methods');
+            var old = this[methodName];
 
-              // ... we create a new function on to
-              this[methodName] = function() {
+            // ... we create a new function on to
+            this[methodName] = function() {
 
-                // and then call the method on `from`
-                var rArgs = from[methodName].apply(this, arguments);
-                 var oldReturn;
-                if(rArgs){
+              // and then call the method on `from`
+              var rArgs = from[methodName].apply(this, arguments);
+              var oldReturn;
+              if (rArgs) {
                 // wherein we first call the method which exists on `to`
                 oldReturn = old.apply(this, rArgs);
-              }
-              else {
+              } else {
                 oldReturn = old.apply(this, arguments);
               }
 
-                // and then return the expected result,
-                // i.e. what the method on `to` returns
-                return oldReturn;
+              // and then return the expected result,
+              // i.e. what the method on `to` returns
+              return oldReturn;
 
-              };
-            }
+            };
           }
         }
+      }
 
-      },
+    },
 
-      //registers overriding function for overriding methods- determined by parent node- this calls new method second
-      extendBehaviorSecond: function(from, methods) {
-        if (!this.containsBehaviorName(from.name)) {
-          this.behaviors.push(from);
-          // if the method is defined on from ...
-          // we add those methods which exists on `from` but not on `to` to the latter
-          _.defaults(this, from);
-          // … and we do the same for events
-          _.defaults(this.events, from.events);
-          // console.log(this);
-          // console.log(from);
-          for (var i = 0; i < methods.length; i++) {
-            var methodName = methods;
-            if (!_.isUndefined(from[methodName])) {
-              // console.log('setting methods');
-              var old = this[methodName];
+    //registers overriding function for overriding methods- determined by parent node- this calls new method second
+    extendBehaviorSecond: function(from, methods) {
+      if (!this.containsBehaviorName(from.name)) {
+        this.behaviors.push(from);
+        // if the method is defined on from ...
+        // we add those methods which exists on `from` but not on `to` to the latter
+        _.defaults(this, from);
+        // … and we do the same for events
+        _.defaults(this.events, from.events);
+        // console.log(this);
+        // console.log(from);
+        for (var i = 0; i < methods.length; i++) {
+          var methodName = methods;
+          if (!_.isUndefined(from[methodName])) {
+            // console.log('setting methods');
+            var old = this[methodName];
 
-              // ... we create a new function on to
-              this[methodName] = function() {
+            // ... we create a new function on to
+            this[methodName] = function() {
 
-                // and then call the method on `from`
-                var rArgs = old.apply(this, arguments);
-                 var newReturn;
-                if(rArgs){
+              // and then call the method on `from`
+              var rArgs = old.apply(this, arguments);
+              var newReturn;
+              if (rArgs) {
                 // wherein we first call the method which exists on `to`
                 newReturn = from[methodName].apply(this, rArgs);
-              }
-              else {
-                 newReturn = from[methodName].apply(this, arguments);
+              } else {
+                newReturn = from[methodName].apply(this, arguments);
               }
 
-                // and then return the expected result,
-                // i.e. what the method on `to` returns
-                return  newReturn;
+              // and then return the expected result,
+              // i.e. what the method on `to` returns
+              return newReturn;
 
-              };
-            }
+            };
           }
         }
+      }
 
-      },
+    },
 
-      addConstraint: function(constraint){
+    addConstraint: function(constraint) {
 
-      }, 
+    },
 
-      addCondition: function(propA,operator,targetB,propB) {
-        var condition = new Condition(propA,operator,targetB,propB);
-        this.conditions.push(condition);
-      },
+    addCondition: function(propA, operator, targetB, propB) {
+      var condition = new Condition(propA, operator, targetB, propB);
+      this.conditions.push(condition);
+    },
 
-      checkConditions: function(instance) {
-        for (var i = 0; i < this.conditions.length; i++) {
-           if(!this.conditions[i].evaluate(instance)) {
-            return false;
-          }
+    checkConditions: function(instance) {
+      for (var i = 0; i < this.conditions.length; i++) {
+        if (!this.conditions[i].evaluate(instance)) {
+          return false;
         }
-        return true;
-      },
+      }
+      return true;
+    },
 
-      checkConstraints: function(constraint, Jinstance){
+    checkConstraints: function(constraint, Jinstance) {
 
-      },
-
-    
-
+    },
 
 
 

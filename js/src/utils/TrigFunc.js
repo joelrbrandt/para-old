@@ -128,6 +128,36 @@ define([
 			}
 		};
 
+		//returns the containing dimension of all dimensions in array
+		TrigFunc.masterDimension = function(dimensions){
+			if(dimensions.length>0){
+			var leftX=dimensions[0].x1;
+      		var topY=dimensions[0].y1;
+      		var rightX =dimensions[0].x2;
+      		var bottomY=dimensions[0].y2;
+
+      for(var i=1;i<dimensions.length;i++){
+      
+            var d = dimensions[i];
+            var lX = d.x1;
+            var tY = d.y1;
+            var rX = d.x2;
+            var bY = d.y2;
+            leftX = (lX<leftX) ? lX : leftX;
+            topY = (tY<topY) ? tY : topY;
+            rightX = (rX>rightX) ? rX : rightX;
+            bottomY = (bY>bottomY) ? bY : bottomY;   
+          }
+
+        return{x1:leftX,y1:topY,x2:rightX,y2:bottomY, width: rightX-leftX,
+        height: bottomY-topY};
+
+	        }
+	        else{
+	        	return{x1:0,y1:0,x2:0,y2:0};
+	        }
+		};
+
 		TrigFunc.distance = function(p1, p2) {
 			//console.log("p1="+p1);
 			//console.log("p2="+p2);
