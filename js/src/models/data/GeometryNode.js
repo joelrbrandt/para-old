@@ -352,6 +352,21 @@ define([
         }
       
         var masterDimensions = TrigFunc.masterDimension(childDimensions);
+        var leftX = this.instance_literals[0].position.x;
+        var topY = this.instance_literals[0].position.y;
+        var rightX = leftX + this.instance_literals[0].width;
+        var bottomY = topY + this.instance_literals[0].height;
+        for(var i=0;i<this.instance_literals.length;i++){
+            var instance = this.instance_literals[i];
+            var lX = instance.position.x;
+            var tY = instance.position.y;
+            var rX = instance.position.x + instance.width;
+            var bY = instance.position.y + instance.height;
+            leftX = (lX < leftX) ? lX : leftX;
+            topY = (tY < topY) ? tY : topY;
+            rightX = (rX > rightX) ? rX : rightX;
+            bottomY = (bY > bottomY) ? bY : bottomY;
+        }
         return masterDimensions;
       }
 
@@ -400,7 +415,7 @@ define([
      
       var dimensions = this.nodeParent.getInstanceDimensions();
      
-      console.log('relative dimensions =');
+      console.log('relative dimensions for+ 'this.type =');
       console.log(dimensions);
       if(dimensions){
         for(var i=0;i<this.instance_literals.length;i++){
