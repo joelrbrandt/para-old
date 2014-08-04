@@ -350,10 +350,8 @@ define([
         for (var k = 0; k < this.children.length; k++) {
           childDimensions.push(this.children[k].getInstanceDimensions());
         }
-        console.log("num child dimensions "+childDimensions.length);
+      
         var masterDimensions = TrigFunc.masterDimension(childDimensions);
-        console.log("masterDimensions=");
-        console.log(masterDimensions)
         return masterDimensions;
       }
 
@@ -398,58 +396,57 @@ define([
     },*/
 
 
-    render: function(data, currentNode) {
-      //first create array of new instances that contain propogated updated data
-
+    setRelative: function(data){
      
+      var dimensions = this.nodeParent.getInstanceDimensions();
+     
+      console.log('relative dimensions =');
+      console.log(dimensions);
+      if(dimensions){
+        for(var i=0;i<this.instance_literals.length;i++){
+          var u_instance = this.instance_literals[i];
+        u_instance.increment({position:{x:dimensions.x1,y:dimensions.y1}});
+        u_instance.dimensions = dimensions;
+        u_instance.position.x=  u_instance.position.x-data[u_instance.instanceParentIndex].dimensions.x1;
+        u_instance.position.y=  u_instance.position.y-data[u_instance.instanceParentIndex].dimensions.y1;
 
-
-      //console.log('render: '+this.type);
-      if (data) {
-        //console.log('found data');
-
-       
-       
-        var dimensions = this.getInstanceDimensions();
-        if(this.children.length<1){
-          dimensions = {x1:0,y1:0,x2:0,y2:0};
+        u_instance.render(data[u_instance.instanceParentIndex]);
+        var rect = new paper.Path.Rectangle(0,0,dimensions.x2-dimensions.x1,dimensions.y2-dimensions.y1);
+          
+         var dot = new paper.Path.Circle(0, 0, 5);
+            if (this.type === 'path') {
+              dot.fillColor = '#00CFFF';
+              rect.strokeColor='#00CFFF';
+            } else if (this.type === 'behavior') {
+              dot.fillColor = '#FF0000';
+               rect.strokeColor='#FF0000';
+            } else {
+              dot.fillColor = '#00ff00';
+                rect.strokeColor='#00ff00';
+            }
+            dot.transform(u_instance.matrix);
+            this.scaffolds.push(dot);
+           
+            rect.transform(u_instance.matrix);
+            this.scaffolds.push(rect);
+          }
         }
-      
-        //console.log('dimensions of ' + this.type + ' =');
-        //console.log(dimensions);
+        for(var j=0;j<this.children.length;j++){
+          this.children[j].setRelative(this.instance_literals);
+        }
 
+    },
+
+     render: function(data, currentNode) {
+      //first create array of new instances that contain propogated updated data
+      if (data) {
+      
         for (var i = 0; i < data.length; i++) {
           for (var j = 0; j < this.instances.length; j++) {
             this.instances[j].instanceParentIndex = i;
+
             var u_instance = this.instances[j].clone();
 
-            var posDiff = TrigFunc.subtract({
-              x: 0,
-              y: 0
-            }, {
-              x: data[i].position.x,
-              y: data[i].position.y,
-            });
-
-            /*console.log('posDiff of ' + this.type + ' =');
-            console.log(posDiff);
-            
-            u_instance.increment({
-              position: posDiff
-            });
-            /*console.log('instance position ' + j + ',' + this.type + ' =');
-            console.log(u_instance.position);*/
-            console.log('instance position before increment ' + j + ',' + this.type + ' =');
-            console.log(u_instance.position);
-            u_instance.dimensions = dimensions
-          
-            u_instance.increment({position:{x:dimensions.x1,y:dimensions.y1}});
-            u_instance.position.x=  u_instance.position.x-data[i].dimensions.x1;
-            u_instance.position.y=  u_instance.position.y-data[i].dimensions.y1;
-
-            console.log('instance position after increment ' + j + ',' + this.type + ' =');
-            console.log(u_instance.position);
-         
 
             if (data[i].renderSignature) {
               u_instance.renderSignature = data[i].renderSignature.slice(0);
@@ -466,24 +463,7 @@ define([
               u_instance.selected = data[i].selected;
               u_instance.anchor = data[i].anchor;
             }
-
-            var dot = new paper.Path.Circle(0, 0, 5);
-            if (this.type === 'path') {
-              dot.fillColor = '#00CFFF';
-            } else if (this.type === 'behavior') {
-              dot.fillColor = '#FF0000';
-            } else {
-              dot.fillColor = '#00ff00';
-            }
-            dot.transform(u_instance.matrix);
-            this.scaffolds.push(dot);
-            var rect = new paper.Path.Rectangle(0,0,dimensions.x2-dimensions.x1,dimensions.y2-dimensions.y1)
-            rect.strokeColor='red';
-            rect.transform(u_instance.matrix);
-            this.scaffolds.push(rect);
             this.instance_literals.push(u_instance);
-
-
 
           }
 
@@ -497,6 +477,7 @@ define([
 
           this.children[k].render(this.instance_literals, currentNode);
         }
+        this.setRelative(data);
       } else {
        // console.log('no data');
         for (var f = 0; f < this.instances.length; f++) {
@@ -508,6 +489,7 @@ define([
           this.children[f].render(this.instances, currentNode);
         }
       }
+      
 
     },
 
