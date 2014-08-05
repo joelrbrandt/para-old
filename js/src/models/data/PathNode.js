@@ -131,14 +131,14 @@ define([
 
     },
 
-    getInstanceDimensions: function() {
+    getInstanceDimensions: function(multiplier) {
       //console.log('setting relative position for'+this.type); 
       var leftX = this.instance_literals[0].position.x;
       var topY = this.instance_literals[0].position.y;
       var rightX = leftX + this.instance_literals[0].width;
       var bottomY = topY + this.instance_literals[0].height;
 
-      for (var i = 1; i < this.instance_literals.length; i++) {
+      for (var i = 0; i < this.instances.length*multiplier; i++) {
 
         var instance = this.instance_literals[i];
         var lX = instance.position.x;
@@ -171,12 +171,17 @@ define([
      */
     render: function(data, currentNode) {
        var master = this.getMasterPath();
+          for(var k=0;k<this.instance_literals.length;k++){
+           console.log('render for ' +this.type+'=');
+          console.log(this.instance_literals[k].position);
+              
+        }
      if(data){
      
-      console.log("rendering with data");
-    
+  
       for (var k = 0; k < this.instance_literals.length; k++) {
             var instance_literal = this.instance_literals[k];
+            instance_literal.compile(data[instance_literal.instanceParentIndex]);
             var path_literal = master.clone();
             path_literal.nodeParent = this;
             path_literal.data.index = k;
@@ -239,7 +244,6 @@ define([
       } else {
        
         for (var z = 0; z < this.instance_literals.length; z++) {
-          console.log('rendering path');
           var path_literal = master.clone();
           path_literal.nodeParent = this;
           path_literal.instanceParentIndex = z;

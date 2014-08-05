@@ -343,74 +343,49 @@ define([
 
     },
 
-    getInstanceDimensions: function() {
+    getInstanceDimensions: function(multiplier) {
       //console.log('setting relative position for'+this.type); 
-      if(this.children.length>0){
+     
         var childDimensions = [];
         for (var k = 0; k < this.children.length; k++) {
-          childDimensions.push(this.children[k].getInstanceDimensions());
+          childDimensions.push(this.children[k].getInstanceDimensions(this.instances.length));
         }
+
       
-        var masterDimensions = TrigFunc.masterDimension(childDimensions);
-        var leftX = this.instance_literals[0].position.x;
-        var topY = this.instance_literals[0].position.y;
-        var rightX = leftX + this.instance_literals[0].width;
-        var bottomY = topY + this.instance_literals[0].height;
-        for(var i=0;i<this.instance_literals.length;i++){
+        var masterDimension = TrigFunc.masterDimension(childDimensions);
+         //console.log('master dimensions for ' +this.type+'=');
+        //console.log(masterDimension);
+        var leftX = this.instance_literals[0].position.x+masterDimension.x1;
+        var topY = this.instance_literals[0].position.y+masterDimension.y1;
+        var rightX = this.instance_literals[0].position.x + masterDimension.x2;
+        var bottomY = this.instance_literals[0].position.y+ masterDimension.y2;
+
+        for (var i = 0; i < this.instances.length*multiplier; i++) {
+
             var instance = this.instance_literals[i];
-            var lX = instance.position.x;
-            var tY = instance.position.y;
-            var rX = instance.position.x + instance.width;
-            var bY = instance.position.y + instance.height;
+            var lX = instance.position.x+masterDimension.x1;
+            var tY = instance.position.y+masterDimension.y1;
+            var rX = instance.position.x + masterDimension.x2;
+            var bY = instance.position.y + masterDimension.y2;
             leftX = (lX < leftX) ? lX : leftX;
             topY = (tY < topY) ? tY : topY;
             rightX = (rX > rightX) ? rX : rightX;
             bottomY = (bY > bottomY) ? bY : bottomY;
-        }
-        return masterDimensions;
       }
 
+      return {
+        x1: leftX,
+        y1: topY,
+        x2: rightX,
+        y2: bottomY,
+        width: rightX-leftX,
+        height: bottomY-topY
+      };
+       
      
     },
 
-    /*renders geometry
-     * if data is provided, creates a temporary instance array with updated values according to data
-     *  otherwise just renders its children with its permanent instances
-     * copies the render signature from the data and concats it with the
-     *index of the instance used to render the path
-     */
-
-
-   /* setDimensions: function(){
-      var childDimensions = [];
-        var masterDimension;
-        if(this.children.length<0){
-          for (var f = 0; f < this.children.length; f++) {
-            var dimensions = this.children[f].setDimensions();
-            childDimensions.push(dimensions);
-          }
-        
-        
-        masterDimension = TrigFunc.masterDimension(childDimensions);
-        
-      }
-      else{
-        masterDimension= this.getInstanceDimensions();
-      }
-      for(var i=0;i<this.instances.length;i++){
-          var dInstance = this.instances[i].clone();
-          if(this.children.length<0){
-            dInstance.width = masterDimension.width;
-            dInstance.height = masterDimension.height;
-            dInstance.increment({position:{x:masterDimension.x1,y:masterDimension.y1}});
-          }
-            dInstance.dimensions= masterDimension;
-          this.dimensioned_instances.push(dInstance);
-        }
-      return masterDimension;
-    },*/
-
-
+   
     setRelative: function(data){
      
       var dimensions = this.nodeParent.getInstanceDimensions();
@@ -501,12 +476,46 @@ define([
 
           this.children[k].compile(this.instance_literals, currentNode);
         }
+        var multiplier = (this.nodeParent) ? this.nodeParent.instanceNum: 1;
+        var dimensions = this.getInstanceDimensions(multiplier);
+        console.log('dimensions for ' +this.type+'=');
+        console.log(dimensions);
+       if(this.children.length>0&&this.type!='root'){
+          for(var i=0;i<this.instance_literals.length;i++){
+            this.instance_literals[i].position.x+=dimensions.x1;
+            this.instance_literals[i].position.y+=dimensions.y1;
+          }
+          for(var j=0;j<this.children.length;j++){
+            for(var k=0;k<this.children[j].instance_literals.length;k++){
+              this.children[j].instance_literals[k].position.x-=dimensions.x1;
+              this.children[j].instance_literals[k].position.y-=dimensions.y1;
+            }
+          }
+        }
+ 
+      
+
+        if(this.type==='root'){
+          console.log('=====================================\n');
+        }
       
     },
 
      render: function(data,currentNode) {
       //first create array of new instances that contain propogated updated data
-     
+        for(var k=0;k<this.instance_literals.length;k++){
+           console.log('render for ' +this.type+'=');
+          console.log(this.instance_literals[k].position);
+          if(data!=null){
+           this.instance_literals[k].compile(data[this.instance_literals[k].instanceParentIndex]);
+         }
+         else{
+          this.instance_literals[k].compile({});  
+         }
+              
+        }
+
+        
         for (var f = 0; f < this.children.length; f++) {
           if(this.type==='root'){
             this.children[f].render(null,currentNode);
@@ -514,6 +523,9 @@ define([
           else{
             this.children[f].render(this.instance_literals,currentNode);
           }
+        }
+         if(this.type==='root'){
+          console.log('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n\n');
         }
 
     },
