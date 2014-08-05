@@ -173,7 +173,7 @@ define([
        var master = this.getMasterPath();
      if(data){
      
-     // console.log('render: '+this.type);
+      console.log("rendering with data");
     
       for (var k = 0; k < this.instance_literals.length; k++) {
             var instance_literal = this.instance_literals[k];
@@ -238,20 +238,20 @@ define([
         
       } else {
        
-        for (var z = 0; z < this.instances.length; z++) {
-          console.log("rendering path");
+        for (var z = 0; z < this.instance_literals.length; z++) {
+          console.log('rendering path');
           var path_literal = master.clone();
           path_literal.nodeParent = this;
           path_literal.instanceParentIndex = z;
-
-        var nInstance = this.instances[z];
+          path_literal.data.index = z;
+          var nInstance = this.instance_literals[z];
           nInstance.compile({});
           path_literal.transform(nInstance.matrix);
           path_literal.visible = nInstance.visible;
-          path_literal.data.renderSignature = [];
-          path_literal.data.renderSignature.push(z);
+          
           this.path_literals.push(path_literal);
           path_literal.instanceIndex = this.path_literals.length - 1;
+          path_literal.selected = nInstance.selected;
         }
       }
 

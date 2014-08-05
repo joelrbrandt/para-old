@@ -490,8 +490,6 @@ define([
         for (var f = 0; f < this.instances.length; f++) {
           var u_instance = this.instances[f].clone();
           u_instance.compile({});
-          u_instance.index = f;
-          u_instance.renderSignature.push(f);
           this.instance_literals.push(u_instance);
 
         }
@@ -510,7 +508,7 @@ define([
       //first create array of new instances that contain propogated updated data
      
         for (var f = 0; f < this.children.length; f++) {
-          if(this.type='root'){
+          if(this.type==='root'){
             this.children[f].render(null,currentNode);
           }
           else{
