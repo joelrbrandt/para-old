@@ -172,7 +172,8 @@ this.event_bus = event_bus;
      //console.log('called root render');
     
       rootNode.clear();
-      rootNode.render(null,currentNode);
+      rootNode.compile(null,currentNode);
+      rootNode.render(null,currentNode)
     },
 
     rootUpdate: function(){

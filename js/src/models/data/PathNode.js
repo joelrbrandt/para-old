@@ -172,7 +172,6 @@ define([
     render: function(data, currentNode) {
        var master = this.getMasterPath();
      if(data){
-       GeometryNode.prototype.render.apply(this, arguments);
      
      // console.log('render: '+this.type);
     
@@ -229,6 +228,7 @@ define([
             }*/
             this.path_literals.push(path_literal);
             path_literal.instanceIndex = this.path_literals.length - 1;
+
             //console.log('path matrix');
             //console.log(path_literal.matrix);
             /*var dot = new paper.Path.Circle(this.instances[k].position.x+data[d].position.x,this.instances[k].position.y+data[d].position.y,5);
@@ -237,18 +237,17 @@ define([
           }
         
       } else {
+       
         for (var z = 0; z < this.instances.length; z++) {
-
+          console.log("rendering path");
           var path_literal = master.clone();
           path_literal.nodeParent = this;
           path_literal.instanceParentIndex = z;
 
         var nInstance = this.instances[z];
-          nInstance.render({});
+          nInstance.compile({});
           path_literal.transform(nInstance.matrix);
-          path_literal.rotate(this.instances[z].rotation);
-          path_literal.scale(this.instances[z].scale);
-          path_literal.visible = this.instances[z].visible;
+          path_literal.visible = nInstance.visible;
           path_literal.data.renderSignature = [];
           path_literal.data.renderSignature.push(z);
           this.path_literals.push(path_literal);

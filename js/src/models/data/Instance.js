@@ -195,7 +195,7 @@ define([
 
 		/*only called on a render function-
 		propagates the instances' properties with that of the data*/
-		render: function(data) {
+		compile: function(data) {
 			//console.log("update called with data:");
 			//cloconsole.log(data);
 			//if(this.nodeParent){
