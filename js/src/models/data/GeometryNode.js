@@ -415,7 +415,7 @@ define([
      
       var dimensions = this.nodeParent.getInstanceDimensions();
      
-      console.log('relative dimensions for+ 'this.type =');
+      //console.log('relative dimensions for+ 'this.type +'=');
       console.log(dimensions);
       if(dimensions){
         for(var i=0;i<this.instance_literals.length;i++){
@@ -452,9 +452,10 @@ define([
 
     },
 
-     render: function(data, currentNode) {
-      //first create array of new instances that contain propogated updated data
-      if (data) {
+
+    
+    compile: function(data,currentNode){
+        if (data) {
       
         for (var i = 0; i < data.length; i++) {
           for (var j = 0; j < this.instances.length; j++) {
@@ -462,14 +463,13 @@ define([
 
             var u_instance = this.instances[j].clone();
 
-
             if (data[i].renderSignature) {
               u_instance.renderSignature = data[i].renderSignature.slice(0);
             }
+
             u_instance.renderSignature.push(j);
             u_instance.index = j;
-            
-            u_instance.render(data[i]);
+            u_instance.compile(data[i]);
 
             if (this.nodeParent == currentNode) {
               u_instance.selected = this.instances[j].selected;
@@ -479,32 +479,44 @@ define([
               u_instance.anchor = data[i].anchor;
             }
             this.instance_literals.push(u_instance);
-
           }
-
-
 
         }
 
+
+
+      } else {
+       // console.log('no data');
+        for (var f = 0; f < this.instances.length; f++) {
+          var u_instance = this.instances[f].clone();
+          u_instance.compile({});
+          u_instance.index = f;
+          u_instance.renderSignature.push(f);
+          this.instance_literals.push(u_instance);
+
+        }
+
+      }
 
 
         for (var k = 0; k < this.children.length; k++) {
 
-          this.children[k].render(this.instance_literals, currentNode);
+          this.children[k].compile(this.instance_literals, currentNode);
         }
-        this.setRelative(data);
-      } else {
-       // console.log('no data');
-        for (var f = 0; f < this.instances.length; f++) {
-          this.instances[f].render({});
-        }
-
-        for (var f = 0; f < this.children.length; f++) {
-
-          this.children[f].render(this.instances, currentNode);
-        }
-      }
       
+    },
+
+     render: function(data,currentNode) {
+      //first create array of new instances that contain propogated updated data
+     
+        for (var f = 0; f < this.children.length; f++) {
+          if(this.type='root'){
+            this.children[f].render(null,currentNode);
+          }
+          else{
+            this.children[f].render(this.instance_literals,currentNode);
+          }
+        }
 
     },
 
