@@ -39,7 +39,7 @@ define([
       this.behaviors = [];
       this.follow = false;
       this.conditions = [];
-
+      this.dimensions = null;
 
 
       SceneNode.apply(this, arguments);
@@ -477,19 +477,25 @@ define([
           this.children[k].compile(this.instance_literals, currentNode);
         }
         var multiplier = (this.nodeParent) ? this.nodeParent.instanceNum: 1;
-        var dimensions = this.getInstanceDimensions(multiplier);
+        this.dimensions = this.getInstanceDimensions(multiplier);
         console.log('dimensions for ' +this.type+'=');
-        console.log(dimensions);
+        console.log(this.dimensions);
        if(this.children.length>0&&this.type!='root'){
-          for(var i=0;i<this.instance_literals.length;i++){
-            this.instance_literals[i].position.x+=dimensions.x1;
-            this.instance_literals[i].position.y+=dimensions.y1;
-          }
+         
           for(var j=0;j<this.children.length;j++){
             for(var k=0;k<this.children[j].instance_literals.length;k++){
-              this.children[j].instance_literals[k].position.x-=dimensions.x1;
-              this.children[j].instance_literals[k].position.y-=dimensions.y1;
+              var pIndex =this.children[j].instance_literals[k].instanceParentIndex;
+              var diffX = this.dimensions.x1-this.instance_literals[pIndex].position.x; 
+              var diffY = this.dimensions.y1-this.instance_literals[pIndex].position.y;
+              this.children[j].instance_literals[k].position.x-=diffX;
+              this.children[j].instance_literals[k].position.y-=diffY;
             }
+          }
+           for(var i=0;i<this.instance_literals.length;i++){
+            var diffX = this.dimensions.x1-this.instance_literals[i].position.x; 
+            var diffY = this.dimensions.y1-this.instance_literals[i].position.y;
+            this.instance_literals[i].position.x+=diffX;
+            this.instance_literals[i].position.y+=diffY;
           }
         }
  
@@ -506,12 +512,28 @@ define([
         for(var k=0;k<this.instance_literals.length;k++){
            console.log('render for ' +this.type+'=');
           console.log(this.instance_literals[k].position);
-          if(data!=null){
-           this.instance_literals[k].compile(data[this.instance_literals[k].instanceParentIndex]);
+          console.log("width ="+this.dimensions.width+",height="+this.dimensions.height);
+          
+         
+
+          if(data!==null){
+            this.instance_literals[k].compile(data[this.instance_literals[k].instanceParentIndex]);
+         
+
+          
+
          }
          else{
-          this.instance_literals[k].compile({});  
+          this.instance_literals[k].compile({});
+
          }
+        if(this.type!=='root'){
+          var rect = new paper.Path.Rectangle(0,0,this.dimensions.width,this.dimensions.height);
+          rect.strokeColor='red';
+          rect.transform(this.instance_literals[k].matrix);
+          this.scaffolds.push(rect);
+        }
+            
               
         }
 
@@ -522,6 +544,7 @@ define([
           }
           else{
             this.children[f].render(this.instance_literals,currentNode);
+
           }
         }
          if(this.type==='root'){
