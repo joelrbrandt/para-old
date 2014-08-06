@@ -182,6 +182,10 @@ define([
       for (var k = 0; k < this.instance_literals.length; k++) {
             var instance_literal = this.instance_literals[k];
             instance_literal.compile(data[instance_literal.instanceParentIndex]);
+            var rect = new paper.Path.Rectangle(0,0,this.dimensions.width,this.dimensions.height);
+            rect.strokeColor='red';
+            rect.transform(instance_literal.matrix);
+            this.scaffolds.push(rect);
             var path_literal = master.clone();
             path_literal.nodeParent = this;
             path_literal.data.index = k;
@@ -250,6 +254,11 @@ define([
           path_literal.data.index = z;
           var nInstance = this.instance_literals[z];
           nInstance.compile({});
+          var rect = new paper.Path.Rectangle(0,0,this.dimensions.width,this.dimensions.height);
+          rect.strokeColor='red';
+          rect.transform(nInstance.matrix);
+          this.scaffolds.push(rect);
+
           path_literal.transform(nInstance.matrix);
           path_literal.visible = nInstance.visible;
           
