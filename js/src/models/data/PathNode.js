@@ -182,10 +182,10 @@ define([
       for (var k = 0; k < this.instance_literals.length; k++) {
             var instance_literal = this.instance_literals[k];
             instance_literal.compile(data[instance_literal.instanceParentIndex]);
-            var rect = new paper.Path.Rectangle(0,0,this.dimensions.width,this.dimensions.height);
+          /*  var rect = new paper.Path.Rectangle(0,0,this.dimensions.width,this.dimensions.height);
             rect.strokeColor='red';
             rect.transform(instance_literal.matrix);
-            this.scaffolds.push(rect);
+            this.scaffolds.push(rect);*/
             var path_literal = master.clone();
             path_literal.nodeParent = this;
             path_literal.data.index = k;
@@ -395,15 +395,20 @@ define([
 
     //checks for intersection and returns the first path found
     checkIntersection: function() {
-      for (var i = 1; i < this.path_literals.length; i++) {
+      console.log("checking path intersection");
+      for (var i = 0; i < this.path_literals.length; i++) {
         var path_literal = this.path_literals[i];
         var paths = paper.project.activeLayer.children;
         for (var j = 0; j < paths.length; j++) {
 
           if (paths[j].visible && !this.containsPath(paths[j])) {
             if (paths[j].nodeParent) {
+              console.log("path has node parent");
               if (paths[j].nodeParent.nodeParent === this.nodeParent && this.nodeParent.type === 'behavior') {
+                console.log("path has same node parent");
+
               } else {
+                console.log("looking for intersection");
                 var ints = paths[j].getIntersections(path_literal);
                 if (ints.length > 0) {
                   return paths[j];

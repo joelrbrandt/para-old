@@ -527,7 +527,7 @@ define([
           this.instance_literals[k].compile({});
 
          }
-        if(this.type!=='root'){
+        if(this.type!=='root'&&this===currentNode){
           var rect = new paper.Path.Rectangle(0,0,this.dimensions.width,this.dimensions.height);
           rect.strokeColor='red';
           rect.transform(this.instance_literals[k].matrix);
@@ -693,6 +693,7 @@ define([
     },
 
     checkIntersection: function() {
+      console.log("checking geom intersection");
       for (var i = 0; i < this.children.length; i++) {
         var intersection = this.children[i].checkIntersection();
         if (intersection !== null) {
