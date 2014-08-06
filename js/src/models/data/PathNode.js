@@ -50,6 +50,7 @@ define([
       var height = path.bounds.height;  
       instance.update({position:position,
         width: width,
+        rotation:{angle:45},
         height: height,
         strokeWidth:path.strokeWidth,
         strokeColor:path.strokeColor,
@@ -133,22 +134,26 @@ define([
 
     getInstanceDimensions: function(multiplier) {
       //console.log('setting relative position for'+this.type); 
-      var leftX = this.instance_literals[0].position.x;
-      var topY = this.instance_literals[0].position.y;
-      var rightX = leftX + this.instance_literals[0].width;
-      var bottomY = topY + this.instance_literals[0].height;
-
+      var mPath = this.getMasterPath().clone();
+      mPath.transform(this.instance_literals[0].matrix);
+      var leftX = mPath.bounds.topLeft.x;
+      var topY = mPath.bounds.topLeft.y;
+      var rightX = mPath.bounds.bottomRight.x;
+      var bottomY = mPath.bounds.bottomRight.y;;
+      mPath.remove();
       for (var i = 0; i < this.instances.length*multiplier; i++) {
-
+        var path = this.getMasterPath().clone();
+        path.transform(this.instance_literals[i].matrix);
         var instance = this.instance_literals[i];
-        var lX = instance.position.x;
-        var tY = instance.position.y;
-        var rX = instance.position.x + instance.width;
-        var bY = instance.position.y + instance.height;
+        var lX = path.bounds.topLeft.x;
+        var tY = path.bounds.topLeft.y;
+        var rX = path.bounds.bottomRight.x;
+        var bY = path.bounds.bottomRight.y;
         leftX = (lX < leftX) ? lX : leftX;
         topY = (tY < topY) ? tY : topY;
         rightX = (rX > rightX) ? rX : rightX;
         bottomY = (bY > bottomY) ? bY : bottomY;
+        path.remove();
       }
 
       return {
@@ -182,16 +187,18 @@ define([
       for (var k = 0; k < this.instance_literals.length; k++) {
             var instance_literal = this.instance_literals[k];
             instance_literal.compile(data[instance_literal.instanceParentIndex]);
-          /*  var rect = new paper.Path.Rectangle(0,0,this.dimensions.width,this.dimensions.height);
-            rect.strokeColor='red';
-            rect.transform(instance_literal.matrix);
-            this.scaffolds.push(rect);*/
+            
             var path_literal = master.clone();
             path_literal.nodeParent = this;
             path_literal.data.index = k;
             path_literal.instanceParentIndex =instance_literal.instanceParentIndex;
           
             path_literal.transform(instance_literal.matrix);
+            var rect = new paper.Path.Rectangle(path_literal.bounds.topLeft,this.dimensions.width,this.dimensions.height);
+            rect.strokeColor='red';
+           
+            this.scaffolds.push(rect);
+            
             path_literal.strokeColor = instance_literal.strokeColor;
             if (path_literal.closed) {
               path_literal.fillColor = instance_literal.fillColor;
@@ -254,12 +261,13 @@ define([
           path_literal.data.index = z;
           var nInstance = this.instance_literals[z];
           nInstance.compile({});
-          var rect = new paper.Path.Rectangle(0,0,this.dimensions.width,this.dimensions.height);
-          rect.strokeColor='red';
-          rect.transform(nInstance.matrix);
-          this.scaffolds.push(rect);
 
+        
           path_literal.transform(nInstance.matrix);
+          var rect = new paper.Path.Rectangle(path_literal.bounds.topLeft,this.dimensions.width,this.dimensions.height);
+           rect.strokeColor='red';
+         
+          this.scaffolds.push(rect);
           path_literal.visible = nInstance.visible;
           
           this.path_literals.push(path_literal);

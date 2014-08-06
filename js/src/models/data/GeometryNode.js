@@ -385,48 +385,6 @@ define([
      
     },
 
-   
-    setRelative: function(data){
-     
-      var dimensions = this.nodeParent.getInstanceDimensions();
-     
-      //console.log('relative dimensions for+ 'this.type +'=');
-      console.log(dimensions);
-      if(dimensions){
-        for(var i=0;i<this.instance_literals.length;i++){
-          var u_instance = this.instance_literals[i];
-        u_instance.increment({position:{x:dimensions.x1,y:dimensions.y1}});
-        u_instance.dimensions = dimensions;
-        u_instance.position.x=  u_instance.position.x-data[u_instance.instanceParentIndex].dimensions.x1;
-        u_instance.position.y=  u_instance.position.y-data[u_instance.instanceParentIndex].dimensions.y1;
-
-        u_instance.render(data[u_instance.instanceParentIndex]);
-        var rect = new paper.Path.Rectangle(0,0,dimensions.x2-dimensions.x1,dimensions.y2-dimensions.y1);
-          
-         var dot = new paper.Path.Circle(0, 0, 5);
-            if (this.type === 'path') {
-              dot.fillColor = '#00CFFF';
-              rect.strokeColor='#00CFFF';
-            } else if (this.type === 'behavior') {
-              dot.fillColor = '#FF0000';
-               rect.strokeColor='#FF0000';
-            } else {
-              dot.fillColor = '#00ff00';
-                rect.strokeColor='#00ff00';
-            }
-            dot.transform(u_instance.matrix);
-            this.scaffolds.push(dot);
-           
-            rect.transform(u_instance.matrix);
-            this.scaffolds.push(rect);
-          }
-        }
-        for(var j=0;j<this.children.length;j++){
-          this.children[j].setRelative(this.instance_literals);
-        }
-
-    },
-
 
     
     compile: function(data,currentNode){
@@ -480,7 +438,7 @@ define([
         this.dimensions = this.getInstanceDimensions(multiplier);
         console.log('dimensions for ' +this.type+'=');
         console.log(this.dimensions);
-       if(this.children.length>0&&this.type!='root'){
+       /*if(this.children.length>0&&this.type!='root'){
          
           for(var j=0;j<this.children.length;j++){
             for(var k=0;k<this.children[j].instance_literals.length;k++){
@@ -497,7 +455,7 @@ define([
             this.instance_literals[i].position.x+=diffX;
             this.instance_literals[i].position.y+=diffY;
           }
-        }
+        }*/
  
       
 
