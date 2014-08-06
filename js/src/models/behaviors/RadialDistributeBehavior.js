@@ -62,14 +62,14 @@ define([
                 child.instances[middle].anchor = true;
                 child.instances[num-1].anchor=false;
                if(TrigFunc.equals(pointA,pointB)){
-                child.instances[middle].position.x-=1;
+                child.instances[middle].position.x-=100;
                 //child.instances[child.instances.length - 1].position.y+=5;
                 pointB = child.instances[middle].position;
               }
               var dist = TrigFunc.distance(pointA,pointB);
               var rad = dist/2;
               var origin=  TrigFunc.midpoint(pointA,pointB);
-
+              console.log("radius ="+rad);
                /*var scaffoldEllipse=  new paper.Path.Circle(new paper.Point(origin.x,origin.y),rad);
     
               
@@ -92,9 +92,9 @@ define([
               
                child.instances[0].update({
                   
-                  rotation:{
+                  /*rotation:{
                     angle:startAngle,
-                  }
+                  }*/
                 });
                 
               for (var i = 1; i < num; i++) {
@@ -109,17 +109,17 @@ define([
                     x: x,
                     y: y
                   },
-                  rotation:{
+                  /*rotation:{
                     angle:angle*(i)+startAngle,
-                  }
+                  }*/
                 });
               }
               else{
-                child.instances[i].update({
+               /* child.instances[i].update({
                   rotation:{
                     angle:angle*(i)+startAngle,
                   }
-                });
+                });*/
               }
 
 

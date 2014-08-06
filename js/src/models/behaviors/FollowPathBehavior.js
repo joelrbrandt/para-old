@@ -20,9 +20,9 @@ define([
 
       update: function(data) {
         //console.log('follow path update: '+ this.type);
-        this.clearScaffolds();
+        
       
-          var zeroedPath = this.pathChild.getLiteral().clone();
+          var zeroedPath = this.pathChild.getMasterPath().clone();
           zeroedPath.position.x =0+zeroedPath.bounds.width/2;
           zeroedPath.position.y=0+zeroedPath.bounds.height/2;
           this.followPath(zeroedPath);
@@ -40,22 +40,16 @@ define([
               var num = this.instances.length;
                  var finalPath;
 
-             if(this.instances[0].position.x==this.instances[num-1].position.x &&this.instances[0].position.y==this.instances[num-1].position.y){
+             //if(this.instances[0].position.x==this.instances[num-1].position.x &&this.instances[0].position.y==this.instances[num-1].position.y){
                 finalPath = path;
-             }
+            /* }
              else{
               var locA =path.getNearestPoint(this.instances[0].position);
               var cA = path.getNearestLocation(this.instances[0].position);
              var locB = path.getNearestPoint(this.instances[num - 1].position);
                 var cB = path.getNearestLocation(this.instances[this.instances.length - 1].position);
 
-              /*var pc = new paper.Path.Circle(locA,5);
-              pc.fillColor ='red';
-              this.scaffolds.push(pc);
-               var pd = new paper.Path.Circle(cA.segment.point,5);
-              pd.fillColor ='green';
-              this.scaffolds.push(pd);*/
-
+    
               var offset = cA.distance;
 
            
@@ -74,7 +68,7 @@ define([
                 }
 
               }
-            }
+            }*/
               var maxDist;
               if(!finalPath.closed){
                 maxDist = finalPath.length / (num - 1);
@@ -101,38 +95,37 @@ define([
 
                 var location_n = finalPath.segments[i].point;
                 var instance = this.instances[i];
-                //instance.resetRotation();
+                console.log("follow path behavior_location:");
+                console.log(location_n);
 
-         /* var dot = new paper.Path.Circle(location_n,5);
-                dot.fillColor = 'blue ';
-                this.scaffolds.push(dot);*/
+      
 
                 instance.visible=true;
                 var delta = location_n.subtract(location);
                 //console.log('child left,top'+left+','+top); 
-                var difference = {x:location_n.x,y:location_n.y};
+                var difference = {x:location_n.x-finalPath.bounds.width,y:location_n.y};
                 instance.update({
                   position: difference
 
                 });
-                if(this.toggleRotate){
+                /*if(this.toggleRotate){
                   console.log("rotation is active");
                    instance.update({
                   rotation: delta.angle
                 });
-                }
+                }*/
                 //console.log('difference=');
                 //console.log(difference);
 
 
                 location = location_n;
               }
-                if(this.toggleRotate){
+              /*  if(this.toggleRotate){
               var startDelta = finalPath.segments[1].point.subtract(finalPath.segments[0].point);
               this.instances[0].update({
                 rotation: startDelta.angle
               });
-            }
+            }*/
 
               finalPath.remove();
               finalPath = null;
