@@ -50,16 +50,15 @@ define([
       var height = path.bounds.height;  
       instance.update({position:position,
         width: width,
-        rotation:{angle:45},
+        rotation:{angle:90},
         height: height,
         strokeWidth:path.strokeWidth,
         strokeColor:path.strokeColor,
         fillColor:path.fillColor, 
         closed:path.closed});
+      
       path.position.x =0;
       path.position.y =0;
-     
-
       path.translate(path.bounds.width/2,path.bounds.height/2);
      
      
@@ -120,8 +119,7 @@ define([
        newPath.position.y =0+newPath.bounds.height/2;
 
         for(var i=0;i<this.instances.length;i++){
-          this.instances[i].update({width:newPath.bounds.width,height:newPath.bounds.height});
-          this.instances[i].increment({position:diff});
+          this.instances[i].update({position:diff,width:newPath.bounds.width,height:newPath.bounds.height});
         }
 
        //swap out old master for new
@@ -134,8 +132,10 @@ define([
 
     getInstanceDimensions: function(multiplier) {
       //console.log('setting relative position for'+this.type); 
-      var mPath = this.getMasterPath().clone();
+      /*var mPath = this.getMasterPath().clone();
+      console.log(this.instance_literals[0].matrix);
       mPath.transform(this.instance_literals[0].matrix);
+
       var leftX = mPath.bounds.topLeft.x;
       var topY = mPath.bounds.topLeft.y;
       var rightX = mPath.bounds.bottomRight.x;
@@ -163,7 +163,19 @@ define([
         y2: bottomY,
         width: rightX-leftX,
         height: bottomY-topY
-      };
+      };*/
+
+
+      return{
+        x1: 0,
+        y1: 0,
+        x2: 0,
+        y2: 0,
+        width: 0,
+        height: 0
+
+
+      }
      
     },
 
@@ -178,7 +190,7 @@ define([
        var master = this.getMasterPath();
           for(var k=0;k<this.instance_literals.length;k++){
            console.log('render for ' +this.type+'=');
-          console.log(this.instance_literals[k].position);
+          console.log(this.instance_literals[k].matrix);
               
         }
      if(data){
@@ -186,7 +198,7 @@ define([
   
       for (var k = 0; k < this.instance_literals.length; k++) {
             var instance_literal = this.instance_literals[k];
-            instance_literal.compile(data[instance_literal.instanceParentIndex]);
+            //instance_literal.compile(data[instance_literal.instanceParentIndex]);
             
             var path_literal = master.clone();
             path_literal.nodeParent = this;
@@ -260,7 +272,7 @@ define([
           path_literal.instanceParentIndex = z;
           path_literal.data.index = z;
           var nInstance = this.instance_literals[z];
-          nInstance.compile({});
+          //nInstance.compile({});
 
         
           path_literal.transform(nInstance.matrix);

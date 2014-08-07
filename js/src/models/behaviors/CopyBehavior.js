@@ -19,7 +19,7 @@ define([
       update: function(data) {
         // console.log('copy behavior update called'  );
         //checks to see if we have the correct number of copies
-
+       
 
         if (this.children.length > 0) {
           for (var z = 0; z < this.children.length; z++) {
