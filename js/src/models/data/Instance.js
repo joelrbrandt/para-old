@@ -18,21 +18,17 @@ define([
 			this.visible = true;
 			this.scale = 1;
 			this.closed = false;
+			
 			this.width = 0;
 			this.height = 0;
-			this.position = {
+			this.origin = {
 				x: 0,
 				y: 0
 			};
-			this.midpoint = {
-				x: 0,
-				y: 0
-			};
-			this.rotation = {
-				angle: 0,
-				x: 0,
-				y: 0
-			};
+
+			this.matrix = new paper.Matrix();
+			this.rotation=0;
+			
 			this.anchor = false;
 			this.drawAnchor = false;
 			this.selected = false;
@@ -45,32 +41,18 @@ define([
 			this.index = null;
 			//array that contains the path of inheritance from a render;
 			this.renderSignature = [];
-			this.dimensions = {
-				x1: 0,
-				y1: 0,
-				x2: 0,
-				y2: 0
-			};
 			Backbone.Model.apply(this, arguments);
-			this.matrix = new paper.Matrix();
 		},
 		reset: function() {
 			//console.log("reset instance");
 			this.visible = true;
 			this.scale = 1;
-			this.position = {
+			this.origin = {
 				x: 0,
 				y: 0
 			};
-			this.rotation = {
-				angle: 0,
-				x: 0,
-				y: 0
-			};
-			this.midpoint = {
-				x: 0,
-				y: 0
-			};
+
+			this.matrix = new paper.Matrix();
 			this.width = 0;
 			this.height = 0;
 			this.anchor = false;
@@ -86,7 +68,8 @@ define([
 			console.log(this.renderSignature);
 			this.set({
 				closed: this.closed,
-				position: this.position,
+				origin: this.origin,
+				matrix: this.matrix.toJSON(),
 				visible: this.visible,
 				scale: this.scale,
 				rotation: this.rotation,
@@ -102,44 +85,47 @@ define([
 
 
 		//only called on a update function- 
-		//sets instances' properties to that of the data
+		//passes a object of vectors
 		update: function(data) {
-			//console.log("calling update on instance: "+this.index+","+this.nodeParent.name);
-			if (data.position) {
-				//console.log('prior position =');
-				//console.log(this.position);
 
-				this.position.x = data.position.x;
-				this.position.y = data.position.y;
-				//console.log('updated position=');
-				//console.log(this.position);
+			
+
+
+			if (data.position) {
+				console.log("updating data position");
+				console.log(data.position);
+				
+				this.origin.x+= data.position.x;
+				this.origin.y+= data.position.y;
+				console.log(this.matrix); 
 			}
+			
+			
+
+			if (data.scale) {
+				this.matrix = this.matrix.scale(data.scale,this.origin);
+			}
+
+			if (data.rotation) {
+				this.rotation = data.rotation.angle;
+			}
+			
+			if(data.origin){
+				this.origin.x=data.origin.x;
+				this.origin.y=data.origin.y;
+			}
+			
+			
+
+			
 			if (data.width) {
 				this.width = data.width;
 			}
 			if (data.height) {
 				this.height = data.height;
 			}
-			if (data.scale) {
-				this.scale = data.scale;
-
-			}
-			if (data.rotation) {
-				//console.log("updating rotation");
-				this.rotation.angle = data.rotation.angle;
-				if (data.rotation.x) {
-					this.rotation.x = data.rotation.x;
-				} else {
-					this.rotation.x = this.midpoint.x;
-
-				}
-				if (data.rotation.y) {
-					this.rotation.y = data.rotation.y;
-				} else {
-					this.rotation.y = this.midpoint.y;
-
-				}
-			}
+			
+			
 			if (data.strokeWidth) {
 				this.strokeWidth = data.strokeWidth;
 			}
@@ -152,31 +138,29 @@ define([
 			if (data.closed) {
 				this.closed = data.closed;
 			}
-			this.midpoint.x = this.position.x + this.width / 2;
-			this.midpoint.y = this.position.y + this.height / 2;
+		
 
 
 
 		},
 
-		increment: function(data) {
+		/*increment: function(data) {
 			//console.log("calling update on instance: "+this.index+","+this.nodeParent.name);
 			if (data.position) {
 				//console.log('prior position =');
 				//console.log(this.position);
 
-				this.position.x += data.position.x;
-				this.position.y += data.position.y;
+				
 				//console.log('updated position=');
 				//console.log(this.position);
 			}
 			if (data.scale) {
-				this.scale *= data.scale;
+				
 
 			}
 			if (data.rotation) {
 				//console.log("updating rotation");
-				this.rotation += data.rotation;
+			
 			}
 			if (data.strokeWidth) {
 				this.strokeWidth = data.strokeWidth;
@@ -189,42 +173,37 @@ define([
 
 				this.fillColor = data.fillColor;
 			}
-			this.midpoint.x = this.position.x + this.width / 2;
-			this.midpoint.y = this.position.y + this.height / 2;
-
-
-
-		},
-
-
-
-		/*only called on a render function-
-		propagates the instances' properties with that of the data*/
-		compile: function(data) {
-			//console.log("update called with data:");
-			//cloconsole.log(data);
-			//if(this.nodeParent){
-			//console.log("calling render on instance: "+this.index+","+this.nodeParent.name);
-			//}
-			this.matrix.reset();
-
-
-			if (data.matrix) {
-				this.matrix = this.matrix.concatenate(data.matrix);
-			}
 		
 
-			var origin = new paper.Point(this.position.x, this.position.y);
+
+		},*/
+
+
+
+		/*propagates the instances' properties with that of the data*/
+		compile: function(data) {
+			
+				var origin = new paper.Point(this.origin.x, this.origin.y);		
+			if (data.matrix) {
+				this.matrix = this.matrix.concatenate(data.matrix);
+				origin = origin.transform(data.matrix);
+
+			}
+		this.matrix = this.matrix.translate(this.origin.x,this.origin.y);
+		this.matrix = this.matrix.rotate(this.rotation);
+		
+		
+			if (data.selected) {
+				this.selected = data.selected;
+			}
+
+
 
 			
-			var rotationOrigin = origin.transform(this.matrix);
+			//var rotationOrigin = origin.transform(this.matrix);
 
-			this.matrix = this.matrix.rotate(this.rotation.angle, rotationOrigin);
-			this.matrix = this.matrix.translate(new paper.Point(this.position.x, this.position.y));
+		
 
-
-			
-			
 
 			if (this.nodeParent.type !== 'root') {
 
@@ -241,10 +220,7 @@ define([
 				this.nodeParent.scaffolds.push(originC);
 			}
 
-			if (data.selected) {
-				this.selected = data.selected;
-			}
-
+			
 			this.counter++;
 			if (this.counter > 1) {
 				this.counter = 0;
@@ -254,18 +230,6 @@ define([
 
 		clone: function() {
 			var newInstance = new Instance();
-			newInstance.position = {
-				x: 0,
-				y: 0
-			};
-			newInstance.position.x = this.position.x;
-			newInstance.position.y = this.position.y;
-			newInstance.scale = this.scale;
-			newInstance.rotation.angle = this.rotation.angle;
-			newInstance.rotation.x = this.rotation.x;
-			newInstance.rotation.x = this.rotation.y;
-			newInstance.midpoint.x = this.midpoint.x;
-			newInstance.midpoint.y = this.midpoint.y;
 			newInstance.width = this.width;
 			newInstance.height = this.height;
 			newInstance.anchor = this.anchor;
@@ -275,10 +239,15 @@ define([
 			newInstance.strokeColor = this.strokeColor;
 			newInstance.fillColor = this.fillColor;
 			newInstance.matrix = this.matrix.clone();
+			console.log("cloned matrix =");
+			newInstance.rotation = this.rotation;
+			newInstance.origin.x=this.origin.x;
+			newInstance.origin.y=this.origin.y;
 			newInstance.index = this.index;
 			newInstance.instanceParentIndex = this.instanceParentIndex;
 			newInstance.renderSignature = this.renderSignature.slice();
 			newInstance.nodeParent = this.nodeParent;
+				console.log(newInstance.matrix);
 			return newInstance;
 
 		}

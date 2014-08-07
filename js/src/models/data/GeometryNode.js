@@ -49,6 +49,7 @@ define([
     initialize: function() {
 
       this.createInstance();
+      this.instances[0].rotation= 10;
     },
 
     addChildNode: function(node) {
@@ -268,23 +269,12 @@ define([
 
     },
 
-    increment: function(data) {
-
-      for (var j = 0; j < this.instances.length; j++) {
-        for (var i = 0; i < data.length; i++) {
-          var instance = this.instances[j];
-          instance.render(data[i]);
-        }
-      }
-
-    },
-
     updateSelected: function(data) {
       for (var j = 0; j < this.instances.length; j++) {
         if (this.instances[j].selected) {
           for (var i = 0; i < data.length; i++) {
             var instance = this.instances[j];
-            instance.increment(data[i]);
+            instance.update(data[i]);
 
           }
         }
@@ -346,27 +336,27 @@ define([
     getInstanceDimensions: function(multiplier) {
       //console.log('setting relative position for'+this.type); 
      
-        var childDimensions = [];
+      /*  var childDimensions = [];
         for (var k = 0; k < this.children.length; k++) {
           childDimensions.push(this.children[k].getInstanceDimensions(this.instances.length));
         }
 
       
         var masterDimension = TrigFunc.masterDimension(childDimensions);
-         //console.log('master dimensions for ' +this.type+'=');
-        //console.log(masterDimension);
-        var leftX = this.instance_literals[0].position.x+masterDimension.x1;
-        var topY = this.instance_literals[0].position.y+masterDimension.y1;
-        var rightX = this.instance_literals[0].position.x + masterDimension.x2;
-        var bottomY = this.instance_literals[0].position.y+ masterDimension.y2;
+         console.log('master dimensions for ' +this.type+'=');
+        console.log(masterDimension);
+        var leftX = this.instance_literals[0].matrix.translation.x+masterDimension.x1;
+        var topY = this.instance_literals[0].matrix.translation.y+masterDimension.y1;
+        var rightX = this.instance_literals[0].matrix.translation.x+ masterDimension.x2;
+        var bottomY = this.instance_literals[0].matrix.translation.y+ masterDimension.y2;
 
         for (var i = 0; i < this.instances.length*multiplier; i++) {
 
-            var instance = this.instance_literals[i];
-            var lX = instance.position.x+masterDimension.x1;
-            var tY = instance.position.y+masterDimension.y1;
-            var rX = instance.position.x + masterDimension.x2;
-            var bY = instance.position.y + masterDimension.y2;
+            var instance = this.instance_literals[0].matrix.translation;
+            var lX = instance.x+masterDimension.x1;
+            var tY = instance.y+masterDimension.y1;
+            var rX = instance.x + masterDimension.x2;
+            var bY = instance.y + masterDimension.y2;
             leftX = (lX < leftX) ? lX : leftX;
             topY = (tY < topY) ? tY : topY;
             rightX = (rX > rightX) ? rX : rightX;
@@ -380,7 +370,18 @@ define([
         y2: bottomY,
         width: rightX-leftX,
         height: bottomY-topY
-      };
+      };*/
+
+      return{
+        x1: 0,
+        y1: 0,
+        x2: 0,
+        y2: 0,
+        width: 0,
+        height: 0
+
+
+      }
        
      
     },
@@ -469,22 +470,19 @@ define([
       //first create array of new instances that contain propogated updated data
         for(var k=0;k<this.instance_literals.length;k++){
            console.log('render for ' +this.type+'=');
-          console.log(this.instance_literals[k].position);
+          console.log(this.instance_literals[k].matrix);
           console.log("width ="+this.dimensions.width+",height="+this.dimensions.height);
           
          
 
-          if(data!==null){
+         /* if(data!==null){
             this.instance_literals[k].compile(data[this.instance_literals[k].instanceParentIndex]);
-         
-
-          
-
          }
+
          else{
           this.instance_literals[k].compile({});
 
-         }
+         }*/
         if(this.type!=='root'&&this===currentNode){
           var rect = new paper.Path.Rectangle(0,0,this.dimensions.width,this.dimensions.height);
           rect.strokeColor='red';
