@@ -15,6 +15,7 @@ require.config({
         'justmath': '../lib/justmath/justmath',
         'sylvester': '../lib/sylvester/sylvester',
         'minicolors':'../lib/minicolors/minicolors', 
+        'filesaver': '../lib/filesaver/filesaver'
 
     },
     
@@ -45,6 +46,9 @@ require.config({
         },
         minicolors:{
           exports:'Minicolors'
+        },
+        filesaver:{
+          exports:'filesaver'
         }
        
     },

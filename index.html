@@ -100,7 +100,15 @@
                   <div class="row">
                    
                     <div id = "prop-menu" class ="col-md-12">
-
+                        <div class="form-group">
+                           
+        <form id="text-options">
+            <label>Filename <input type="text" class="filename" id="text-filename" placeholder="my_drawing"/></label>
+             <input type="submit" id="save" value="save"/>
+              <input type="submit" id ="export" value="download svg"/>
+              <label>Load file <input type="file" accept=".txt" id="load" name="files" single /></label> <output id="loaded"></output>
+            </form>
+            </div>
             <div class="form-group">
               <label for="hidden-input">Fill</label>
               <br>
@@ -161,6 +169,7 @@
    
  <script src="js/lib/jquery/jquery-min.js"></script>
          <script src="js/lib/jquery/jquery-ui.js"></script>
+    <script src="js/lib/filesaver/filesaver.js" type="text/javascript"></script> 
 
   <script src="js/lib/bootstrap/bootstrap.min.js"></script>
     <script src="js/lib/handlebars/handlebars.js" type="text/javascript"></script> 
@@ -173,6 +182,14 @@
       <script>
     
 $(document).ready( function() {
+
+
+// Check for the various File API support.
+if (window.File && window.FileReader && window.FileList && window.Blob) {
+  // Great success! All the File APIs are supported.
+} else {
+  alert('The File APIs are not fully supported in this browser.');
+}
 
            $('#strokeSlider').slider();
            $('#strokeSlider').on('slide', function(slideEvt) {
