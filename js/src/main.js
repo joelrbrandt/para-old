@@ -16,7 +16,8 @@ require.config({
         'sylvester': '../lib/sylvester/sylvester',
         'minicolors':'../lib/minicolors/minicolors', 
         'filesaver': '../lib/filesaver/filesaver',
-        'minicolors'  : '../lib/minicolors/minicolors'
+        'minicolors'  : '../lib/minicolors/minicolors',
+        'slider' : '../lib/slider/slider'
 
     },
     
@@ -50,6 +51,9 @@ require.config({
           exports:'filesaver'
         },
         'minicolors': {     //<-- cookie depends on Jquery and exports nothing
+        deps: ['jquery']
+        },
+         'slider': {     //<-- cookie depends on Jquery and exports nothing
         deps: ['jquery']
         }
        
