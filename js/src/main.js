@@ -15,7 +15,8 @@ require.config({
         'justmath': '../lib/justmath/justmath',
         'sylvester': '../lib/sylvester/sylvester',
         'minicolors':'../lib/minicolors/minicolors', 
-        'filesaver': '../lib/filesaver/filesaver'
+        'filesaver': '../lib/filesaver/filesaver',
+        'minicolors'  : '../lib/minicolors/minicolors'
 
     },
     
@@ -44,11 +45,12 @@ require.config({
         sylvester:{
           exports:'Sylvester'
         },
-        minicolors:{
-          exports:'Minicolors'
-        },
+       
         filesaver:{
           exports:'filesaver'
+        },
+        'minicolors': {     //<-- cookie depends on Jquery and exports nothing
+        deps: ['jquery']
         }
        
     },
