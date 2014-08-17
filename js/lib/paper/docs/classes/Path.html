@@ -1502,6 +1502,57 @@ myPath.closed = true;
 </div>
 		
 			
+<div id="length" class="member">
+<div class="member-link">
+<a name="length" href="#length"><tt><b>length</b></tt></a>
+</div>
+<div class="member-description hidden">
+
+<div class="member-text">
+	<p>The approximate length of the path in points.</p>
+	
+		<p>Read only.</p>
+	
+	
+	<ul><b>Type:</b>
+	<li>
+		<tt>Number</tt>
+	</li>
+	</ul>
+	
+	
+</div>
+
+</div>
+</div>
+		
+			
+<div id="area" class="member">
+<div class="member-link">
+<a name="area" href="#area"><tt><b>area</b></tt></a>
+</div>
+<div class="member-description hidden">
+
+<div class="member-text">
+	<p>The area of the path in square points. Self-intersecting paths can
+contain sub-areas that cancel each other out.</p>
+	
+		<p>Read only.</p>
+	
+	
+	<ul><b>Type:</b>
+	<li>
+		<tt>Number</tt>
+	</li>
+	</ul>
+	
+	
+</div>
+
+</div>
+</div>
+		
+			
 <div id="fullyselected" class="member">
 <div class="member-link">
 <a name="fullyselected" href="#fullyselected"><tt><b>fullySelected</b></tt></a>
@@ -1580,57 +1631,6 @@ if (path2.fullySelected) {
 	<ul><b>Type:</b>
 	<li>
 		<tt>Boolean</tt>
-	</li>
-	</ul>
-	
-	
-</div>
-
-</div>
-</div>
-		
-			
-<div id="length" class="member">
-<div class="member-link">
-<a name="length" href="#length"><tt><b>length</b></tt></a>
-</div>
-<div class="member-description hidden">
-
-<div class="member-text">
-	<p>The approximate length of the path in points.</p>
-	
-		<p>Read only.</p>
-	
-	
-	<ul><b>Type:</b>
-	<li>
-		<tt>Number</tt>
-	</li>
-	</ul>
-	
-	
-</div>
-
-</div>
-</div>
-		
-			
-<div id="area" class="member">
-<div class="member-link">
-<a name="area" href="#area"><tt><b>area</b></tt></a>
-</div>
-<div class="member-description hidden">
-
-<div class="member-text">
-	<p>The area of the path in square points. Self-intersecting paths can
-contain sub-areas that cancel each other out.</p>
-	
-		<p>Read only.</p>
-	
-	
-	<ul><b>Type:</b>
-	<li>
-		<tt>Number</tt>
 	</li>
 	</ul>
 	
@@ -2780,6 +2780,8 @@ path.selected = true;
 </div>
 		
 			
+<h3>Positions on Paths and Curves</h3>
+
 <div id="getlocationof-point" class="member">
 <div class="member-link">
 <a name="getlocationof-point" href="#getlocationof-point"><tt><b>getLocationOf</b>(point)</tt></a>
@@ -2816,22 +2818,57 @@ path, <tt>null</tt> otherwise.</p>
 </div>
 		
 			
-<h3>Positions on Paths and Curves</h3>
+<div id="getoffsetof-point" class="member">
+<div class="member-link">
+<a name="getoffsetof-point" href="#getoffsetof-point"><tt><b>getOffsetOf</b>(point)</tt></a>
+</div>
+<div class="member-description hidden">
+<div class="member-text">
+	<p>Returns the length of the path from its beginning up to up to the
+specified point if it lies on the path, <tt>null</tt> otherwise.</p>
+	
+<ul><b>Parameters:</b>
 
+<li>
+<tt>point:</tt> 
+<a href="../classes/Point.html"><tt>Point</tt></a>
+&mdash;&nbsp;the point on the path.
+
+</li>
+
+</ul>
+
+	
+	<ul><b>Returns:</b>
+	
+		<li>
+<tt><tt>Number</tt></tt>&nbsp;&mdash;&nbsp;the length of the path up to the specified point.
+</li>
+	
+	</ul>
+
+	
+	
+</div>
+</div>
+</div>
+		
+			
 <div id="getlocationat-offset" class="member">
 <div class="member-link">
 <a name="getlocationat-offset" href="#getlocationat-offset"><tt><b>getLocationAt</b>(offset[, isParameter])</tt></a>
 </div>
 <div class="member-description hidden">
 <div class="member-text">
-	
+	<p>Returns the curve location of the specified offset on the path.</p>
 	
 <ul><b>Parameters:</b>
 
 <li>
 <tt>offset:</tt> 
 <tt>Number</tt>
-
+&mdash;&nbsp;the offset on the path, where <tt>0</tt> is at
+the beginning of the path and <a href="../classes/Path.html#length"><tt>path.length</tt></a> at the end.
 
 </li>
 
@@ -2848,7 +2885,7 @@ path, <tt>null</tt> otherwise.</p>
 	<ul><b>Returns:</b>
 	
 		<li>
-<tt><a href="../classes/CurveLocation.html"><tt>CurveLocation</tt></a></tt>
+<tt><a href="../classes/CurveLocation.html"><tt>CurveLocation</tt></a></tt>&nbsp;&mdash;&nbsp;the curve location at the specified offset
 </li>
 	
 	</ul>
@@ -2873,7 +2910,8 @@ path, <tt>null</tt> otherwise.</p>
 <li>
 <tt>offset:</tt> 
 <tt>Number</tt>
-
+&mdash;&nbsp;the offset on the path, where <tt>0</tt> is at
+the beginning of the path and <a href="../classes/Path.html#length"><tt>path.length</tt></a> at the end.
 
 </li>
 
@@ -2983,14 +3021,16 @@ for (var i = 0; i < amount + 1; i++) {
 </div>
 <div class="member-description hidden">
 <div class="member-text">
-	<p>Calculates the tangent to the path at the given offset as a vector point.</p>
+	<p>Calculates the tangent to the path at the given offset as a vector
+point.</p>
 	
 <ul><b>Parameters:</b>
 
 <li>
 <tt>offset:</tt> 
 <tt>Number</tt>
-
+&mdash;&nbsp;the offset on the path, where <tt>0</tt> is at
+the beginning of the path and <a href="../classes/Path.html#length"><tt>path.length</tt></a> at the end.
 
 </li>
 
@@ -3115,7 +3155,8 @@ for (var i = 0; i < amount + 1; i++) {
 <li>
 <tt>offset:</tt> 
 <tt>Number</tt>
-
+&mdash;&nbsp;the offset on the path, where <tt>0</tt> is at
+the beginning of the path and <a href="../classes/Path.html#length"><tt>path.length</tt></a> at the end.
 
 </li>
 
@@ -4139,9 +4180,9 @@ relation to its parent item in which it is contained.</p>
 </div>
 
 	
-<div id="globalmatrix-_internal" class="member">
+<div id="globalmatrix-_dontClone" class="member">
 <div class="member-link">
-<a name="globalmatrix-_internal" href="#globalmatrix-_internal"><tt><b>globalMatrix</b></tt></a>
+<a name="globalmatrix-_dontClone" href="#globalmatrix-_dontClone"><tt><b>globalMatrix</b></tt></a>
 </div>
 <div class="member-description hidden">
 
@@ -4692,8 +4733,8 @@ circle.strokeWidth = 10;
 <div class="member-description hidden">
 
 <div class="member-text">
-	<p>The shape to be used at the end of open <a href="../classes/Path.html"><tt>Path</tt></a> items, when they
-have a stroke.</p>
+	<p>The shape to be used at the beginning and end of open <a href="../classes/Path.html"><tt>Path</tt></a> items,
+when they have a stroke.</p>
 	
 	
 		<ul><b>Default:</b>
@@ -4756,7 +4797,8 @@ line2.strokeCap = 'butt';
 <div class="member-description hidden">
 
 <div class="member-text">
-	<p>The shape to be used at the corners of paths when they have a stroke.</p>
+	<p>The shape to be used at the segments and corners of <a href="../classes/Path.html"><tt>Path</tt></a> items
+when they have a stroke.</p>
 	
 	
 		<ul><b>Default:</b>
@@ -4827,6 +4869,37 @@ path3.strokeJoin = 'bevel';
 	<ul><b>Type:</b>
 	<li>
 		<tt>Number</tt>
+	</li>
+	</ul>
+	
+	
+</div>
+
+</div>
+</div>
+
+	
+<div id="strokescaling" class="member">
+<div class="member-link">
+<a name="strokescaling" href="#strokescaling"><tt><b>strokeScaling</b></tt></a>
+</div>
+<div class="member-description hidden">
+
+<div class="member-text">
+	<p>Specifies whether the stroke is to be drawn taking the current affine
+transformation into account (the default behavior), or whether it should
+appear as a non-scaling stroke.</p>
+	
+	
+		<ul><b>Default:</b>
+		<li>
+		<tt>true</tt>
+		</li>
+		</ul>
+	
+	<ul><b>Type:</b>
+	<li>
+		<tt>Boolean</tt>
 	</li>
 	</ul>
 	
@@ -5589,6 +5662,81 @@ path.onMouseLeave = function(event) {
 </div>
 </div>
 
+	
+<div id="tangent" class="member">
+<div class="member-link">
+<a name="tangent" href="#tangent"><tt><b>tangent</b></tt></a>
+</div>
+<div class="member-description hidden">
+
+<div class="member-text">
+	<p>The tangential vector to the <tt>#curve</tt> at the given location.</p>
+	
+		<p>Read only.</p>
+	
+	
+	<ul><b>Type:</b>
+	<li>
+		<a href="../classes/Point.html"><tt>Point</tt></a>
+	</li>
+	</ul>
+	
+	
+</div>
+
+</div>
+</div>
+
+	
+<div id="normal" class="member">
+<div class="member-link">
+<a name="normal" href="#normal"><tt><b>normal</b></tt></a>
+</div>
+<div class="member-description hidden">
+
+<div class="member-text">
+	<p>The normal vector to the <tt>#curve</tt> at the given location.</p>
+	
+		<p>Read only.</p>
+	
+	
+	<ul><b>Type:</b>
+	<li>
+		<a href="../classes/Point.html"><tt>Point</tt></a>
+	</li>
+	</ul>
+	
+	
+</div>
+
+</div>
+</div>
+
+	
+<div id="curvature" class="member">
+<div class="member-link">
+<a name="curvature" href="#curvature"><tt><b>curvature</b></tt></a>
+</div>
+<div class="member-description hidden">
+
+<div class="member-text">
+	<p>The curvature of the <tt>#curve</tt> at the given location.</p>
+	
+		<p>Read only.</p>
+	
+	
+	<ul><b>Type:</b>
+	<li>
+		<tt>Number</tt>
+	</li>
+	</ul>
+	
+	
+</div>
+
+</div>
+</div>
+
 </div>
 
 
@@ -5654,31 +5802,6 @@ circle.set({
 </div>
 
 
-</div>
-</div>
-</div>
-
-	
-<div id="isinserted" class="member">
-<div class="member-link">
-<a name="isinserted" href="#isinserted"><tt><b>isInserted</b>()</tt></a>
-</div>
-<div class="member-description hidden">
-<div class="member-text">
-	<p>Checks whether the item and all its parents are inserted into the DOM or
-not.</p>
-	
-	
-	<ul><b>Returns:</b>
-	
-		<li>
-<tt><tt>Boolean</tt></tt>&nbsp;&mdash;&nbsp;<tt>true</tt> if the item is inserted into the DOM, <tt>false</tt> otherwise
-</li>
-	
-	</ul>
-
-	
-	
 </div>
 </div>
 </div>
@@ -5803,7 +5926,7 @@ is not removed after rasterization.</p>
 <tt>resolution:</tt> 
 <tt>Number</tt>
 &mdash;&nbsp;the resolution of the raster
-in pixels per inch (DPI). If not speceified, the value of
+in pixels per inch (DPI). If not specified, the value of
 <tt>view.resolution</tt> is used.
 &mdash;&nbsp;optional, default: <tt>view.resolution</tt>
 </li>
@@ -5930,14 +6053,16 @@ and may contain a combination of the following values:</p>
 <p><b>options.tolerance:</b> <tt>Number</tt> – the tolerance of the hit test
 in points. Can also be controlled through
 <a href="../classes/Project.html#options"><tt>project.options</tt></a><tt>.hitTolerance</tt>.</p>
-<p><b>options.type:</b> Only hit test again a certain item type:</p>
-<p><tt>Group, Layer, Path, CompoundPath, Shape, Raster, PlacedSymbol,
-PointText</tt>, etc.</p>
+<p><b>options.class:</b> Only hit test again a certain item class and its
+sub-classes: <tt>Group, Layer, Path, CompoundPath, Shape, Raster,
+PlacedSymbol, PointText</tt>, etc.</p>
 <p><b>options.fill:</b> <tt>Boolean</tt> – hit test the fill of items.</p>
-<p><b>options.stroke:</b> <tt>Boolean</tt> – hit test the curves of path
-items, taking into account stroke width.</p>
-<p><b>options.segment:</b> <tt>Boolean</tt> – hit test for
+<p><b>options.stroke:</b> <tt>Boolean</tt> – hit test the stroke of path
+items, taking into account the setting of stroke color and width.</p>
+<p><b>options.segments:</b> <tt>Boolean</tt> – hit test for
 <a href="../classes/Segment.html#point"><tt>segment.point</tt></a> of <a href="../classes/Path.html"><tt>Path</tt></a> items.</p>
+<p><b>options.curves:</b> <tt>Boolean</tt> – hit test the curves of path
+items, without taking the stroke color or width into account.</p>
 <p><b>options.handles:</b> <tt>Boolean</tt> – hit test for the handles
 (<a href="../classes/Segment.html#handlein"><tt>segment.handleIn</tt></a> / <a href="../classes/Segment.html#handleout"><tt>segment.handleOut</tt></a>) of path segments.</p>
 <p><b>options.ends:</b> <tt>Boolean</tt> – only hit test for the first or
@@ -5982,6 +6107,142 @@ hit
 	</ul>
 
 	
+	
+</div>
+</div>
+</div>
+
+	
+<h3>Fetching and matching items</h3>
+
+<div id="matches-match" class="member">
+<div class="member-link">
+<a name="matches-match" href="#matches-match"><tt><b>matches</b>(match)</tt></a>
+</div>
+<div class="member-description hidden">
+<div class="member-text">
+	<p>Check whether the item matches the properties in the specified object.</p>
+<p>Extended matching is possible by providing a compare function or
+regular expression. Matching points, colors only work as a comparison
+of the full object, not partial matching (e.g. only providing the x-
+coordinate to match all points with that x-value). Partial matching
+does work for <a href="../classes/Item.html#data"><tt>item.data</tt></a>.</p>
+	
+<ul><b>Parameters:</b>
+
+<li>
+<tt>match:</tt> 
+<tt>Object</tt>
+&mdash;&nbsp;The criteria to match against.
+
+</li>
+
+</ul>
+
+	
+	<ul><b>Returns:</b>
+	
+		<li>
+<tt></tt>&nbsp;&mdash;&nbsp;<tt>true</tt> if the item matches the criteria, <tt>false</tt> otherwise
+</li>
+	
+	</ul>
+
+	
+	<p><b>See also:</b>
+	<tt><a href="../classes/Project.html#getitems-match"><tt>project.getItems(match)</tt></a></tt>
+	</p>
+
+	
+</div>
+</div>
+</div>
+
+	
+<div id="getitems-match" class="member">
+<div class="member-link">
+<a name="getitems-match" href="#getitems-match"><tt><b>getItems</b>(match)</tt></a>
+</div>
+<div class="member-description hidden">
+<div class="member-text">
+	<p>Fetch the descendants (children or children of children) of this item
+that match the properties in the specified object.</p>
+<p>Extended matching is possible by providing a compare function or
+regular expression. Matching points, colors only work as a comparison
+of the full object, not partial matching (e.g. only providing the x-
+coordinate to match all points with that x-value). Partial matching
+does work for <a href="../classes/Item.html#data"><tt>item.data</tt></a>.</p>
+	
+<ul><b>Parameters:</b>
+
+<li>
+<tt>match:</tt> 
+<tt>Object</tt>
+&mdash;&nbsp;The criteria to match against.
+
+</li>
+
+</ul>
+
+	
+	<ul><b>Returns:</b>
+	
+		<li>
+<tt>Array of <a href="../classes/Item.html"><tt>Item</tt></a> objects</tt>
+</li>
+	
+	</ul>
+
+	
+	<p><b>See also:</b>
+	<tt><a href="../classes/Project.html#getitems-match"><tt>project.getItems(match)</tt></a></tt>
+	</p>
+
+	
+</div>
+</div>
+</div>
+
+	
+<div id="getitem-match" class="member">
+<div class="member-link">
+<a name="getitem-match" href="#getitem-match"><tt><b>getItem</b>(match)</tt></a>
+</div>
+<div class="member-description hidden">
+<div class="member-text">
+	<p>Fetch the first descendant (child or child of child) of this item
+that matches the properties in the specified object.</p>
+<p>Extended matching is possible by providing a compare function or
+regular expression. Matching points, colors only work as a comparison
+of the full object, not partial matching (e.g. only providing the x-
+coordinate to match all points with that x-value). Partial matching
+does work for <a href="../classes/Item.html#data"><tt>item.data</tt></a>.</p>
+	
+<ul><b>Parameters:</b>
+
+<li>
+<tt>match:</tt> 
+<tt>Object</tt>
+&mdash;&nbsp;The criteria to match against.
+
+</li>
+
+</ul>
+
+	
+	<ul><b>Returns:</b>
+	
+		<li>
+<tt><a href="../classes/Item.html"><tt>Item</tt></a></tt>
+</li>
+	
+	</ul>
+
+	
+	<p><b>See also:</b>
+	<tt><a href="../classes/Project.html#getitem-match"><tt>project.getItem(match)</tt></a></tt>
+	</p>
+
 	
 </div>
 </div>
@@ -6095,7 +6356,7 @@ matchShapes: false }</tt>
 	<ul><b>Returns:</b>
 	
 		<li>
-<tt><tt>SVGSVGElement</tt></tt>&nbsp;&mdash;&nbsp;the item converted to an SVG node
+<tt><tt>SVGElement</tt></tt>&nbsp;&mdash;&nbsp;the item converted to an SVG node
 </li>
 	
 	</ul>
@@ -6125,7 +6386,7 @@ items should be expanded to path items.</p>
 
 <li>
 <tt>svg:</tt> 
-<tt>SVGSVGElement</tt> / <tt>String</tt>
+<tt>SVGElement</tt> / <tt>String</tt>
 &mdash;&nbsp;the SVG content to import
 
 </li>
@@ -6692,6 +6953,80 @@ with no segments all are considered empty.</p>
 </div>
 
 	
+<h3>Style Tests</h3>
+
+<div id="hasfill" class="member">
+<div class="member-link">
+<a name="hasfill" href="#hasfill"><tt><b>hasFill</b>()</tt></a>
+</div>
+<div class="member-description hidden">
+<div class="member-text">
+	<p>Checks whether the item has a fill.</p>
+	
+	
+	<ul><b>Returns:</b>
+	
+		<li>
+<tt><tt>Boolean</tt></tt>&nbsp;&mdash;&nbsp;<tt>true</tt> if the item has a fill, <tt>false</tt> otherwise
+</li>
+	
+	</ul>
+
+	
+	
+</div>
+</div>
+</div>
+
+	
+<div id="hasstroke" class="member">
+<div class="member-link">
+<a name="hasstroke" href="#hasstroke"><tt><b>hasStroke</b>()</tt></a>
+</div>
+<div class="member-description hidden">
+<div class="member-text">
+	<p>Checks whether the item has a stroke.</p>
+	
+	
+	<ul><b>Returns:</b>
+	
+		<li>
+<tt><tt>Boolean</tt></tt>&nbsp;&mdash;&nbsp;<tt>true</tt> if the item has a stroke, <tt>false</tt> otherwise
+</li>
+	
+	</ul>
+
+	
+	
+</div>
+</div>
+</div>
+
+	
+<div id="hasshadow" class="member">
+<div class="member-link">
+<a name="hasshadow" href="#hasshadow"><tt><b>hasShadow</b>()</tt></a>
+</div>
+<div class="member-description hidden">
+<div class="member-text">
+	<p>Checks whether the item has a shadow.</p>
+	
+	
+	<ul><b>Returns:</b>
+	
+		<li>
+<tt><tt>Boolean</tt></tt>&nbsp;&mdash;&nbsp;<tt>true</tt> if the item has a shadow, <tt>false</tt> otherwise
+</li>
+	
+	</ul>
+
+	
+	
+</div>
+</div>
+</div>
+
+	
 <h3>Hierarchy Tests</h3>
 
 <div id="haschildren" class="member">
@@ -6707,6 +7042,31 @@ with no segments all are considered empty.</p>
 	
 		<li>
 <tt><tt>Boolean</tt></tt>&nbsp;&mdash;&nbsp;<tt>true</tt> it has one or more children, <tt>false</tt> otherwise
+</li>
+	
+	</ul>
+
+	
+	
+</div>
+</div>
+</div>
+
+	
+<div id="isinserted" class="member">
+<div class="member-link">
+<a name="isinserted" href="#isinserted"><tt><b>isInserted</b>()</tt></a>
+</div>
+<div class="member-description hidden">
+<div class="member-text">
+	<p>Checks whether the item and all its parents are inserted into the DOM or
+not.</p>
+	
+	
+	<ul><b>Returns:</b>
+	
+		<li>
+<tt><tt>Boolean</tt></tt>&nbsp;&mdash;&nbsp;<tt>true</tt> if the item is inserted into the DOM, <tt>false</tt> otherwise
 </li>
 	
 	</ul>
@@ -8404,9 +8764,9 @@ path returns the result as a new group item.</p>
 </div>
 
 	
-<div id="getintersections(path, sorted)-path" class="member">
+<div id="getintersections-path" class="member">
 <div class="member-link">
-<a name="getintersections(path, sorted)-path" href="#getintersections(path, sorted)-path"><tt><b>getIntersections(path, sorted)</b>(path)</tt></a>
+<a name="getintersections-path" href="#getintersections-path"><tt><b>getIntersections</b>(path[, sorted])</tt></a>
 </div>
 <div class="member-description hidden">
 <div class="member-text">
@@ -8423,6 +8783,14 @@ supported.</p>
 
 </li>
 
+<li>
+<tt>sorted:</tt> 
+<tt>Boolean</tt>
+&mdash;&nbsp;specifies whether the returned
+<a href="../classes/CurveLocation.html"><tt>CurveLocation</tt></a> objects should be sorted by path and offset
+&mdash;&nbsp;optional, default: <tt>false</tt>
+</li>
+
 </ul>
 
 	
@@ -8437,7 +8805,7 @@ paths
 
 	
 	<p>
-<b>Example</b> &mdash; Create a rectangular path with its top-left point at {x: 30, y: 25} and a size of {width: 50, height: 50}:
+<b>Example</b> &mdash; Finding the intersections between two paths
 </p>
 
 <div class="paperscript split">
@@ -8454,7 +8822,7 @@ var secondPath = path.clone();
 var intersectionGroup = new Group();
 
 function onFrame(event) {
-    secondPath.rotate(3);
+    secondPath.rotate(1);
 
     var intersections = path.getIntersections(secondPath);
     intersectionGroup.removeChildren();
@@ -8463,9 +8831,9 @@ function onFrame(event) {
         var intersectionPath = new Path.Circle({
             center: intersections[i].point,
             radius: 4,
-            fillColor: 'red'
+            fillColor: 'red',
+            parent: intersectionGroup
         });
-        intersectionGroup.addChild(intersectionPath);
     }
 }
 </script>

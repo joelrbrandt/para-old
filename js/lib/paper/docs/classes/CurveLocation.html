@@ -23,7 +23,7 @@ the curve is part of a <a href="../classes/Path.html"><tt>Path</tt></a> item, it
 {@link Path#getLocationAt(offset, isParameter)},
 <a href="../classes/Path.html#getlocationof-point"><tt>path.getLocationOf(point)</tt></a>,
 {@link Path#getNearestLocation(point),
-<tt>PathItem#getIntersections(path)</tt>,
+<a href="../classes/PathItem.html#getintersections-path"><tt>pathItem.getIntersections(path)</tt></a>,
 etc.</p>
 
 </div>
@@ -113,7 +113,7 @@ etc.</p>
 <div class="member-description hidden">
 
 <div class="member-text">
-	<p>The curve by which the location is defined.</p>
+	<p>The curve that this location belongs to.</p>
 	
 		<p>Read only.</p>
 	
@@ -139,7 +139,7 @@ etc.</p>
 
 <div class="member-text">
 	<p>The curve location on the intersecting curve, if this location is the
-result of a call to <tt>PathItem#getIntersections(path)</tt> /
+result of a call to <a href="../classes/PathItem.html#getintersections-path"><tt>pathItem.getIntersections(path)</tt></a> /
 <tt>Curve#getIntersections(curve)</tt>.</p>
 	
 		<p>Read only.</p>
@@ -217,7 +217,8 @@ curve is part of a <a href="../classes/Path.html"><tt>Path</tt></a> item.</p>
 
 <div class="member-text">
 	<p>The length of the path from its beginning up to the location described
-by this object.</p>
+by this object. If the curve is not part of a path, then the length
+within the curve is returned instead.</p>
 	
 		<p>Read only.</p>
 	
@@ -297,56 +298,6 @@ the curve).</p>
 <div class="member-text">
 	<p>The point which is defined by the <a href="../classes/CurveLocation.html#curve" onclick="return toggleMember('curve', true);"><tt>curve</tt></a> and
 <a href="../classes/CurveLocation.html#parameter" onclick="return toggleMember('parameter', true);"><tt>parameter</tt></a>.</p>
-	
-		<p>Read only.</p>
-	
-	
-	<ul><b>Type:</b>
-	<li>
-		<a href="../classes/Point.html"><tt>Point</tt></a>
-	</li>
-	</ul>
-	
-	
-</div>
-
-</div>
-</div>
-		
-			
-<div id="tangent" class="member">
-<div class="member-link">
-<a name="tangent" href="#tangent"><tt><b>tangent</b></tt></a>
-</div>
-<div class="member-description hidden">
-
-<div class="member-text">
-	<p>The tangential vector to the <a href="../classes/CurveLocation.html#curve" onclick="return toggleMember('curve', true);"><tt>curve</tt></a> at the given location.</p>
-	
-		<p>Read only.</p>
-	
-	
-	<ul><b>Type:</b>
-	<li>
-		<a href="../classes/Point.html"><tt>Point</tt></a>
-	</li>
-	</ul>
-	
-	
-</div>
-
-</div>
-</div>
-		
-			
-<div id="normal" class="member">
-<div class="member-link">
-<a name="normal" href="#normal"><tt><b>normal</b></tt></a>
-</div>
-<div class="member-description hidden">
-
-<div class="member-text">
-	<p>The normal vector to the <a href="../classes/CurveLocation.html#curve" onclick="return toggleMember('curve', true);"><tt>curve</tt></a> at the given location.</p>
 	
 		<p>Read only.</p>
 	

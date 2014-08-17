@@ -12,14 +12,11 @@
 			for (var i = 0, l = path.segments.length; i < l; i++) {
 				for (var j = 0; j < 3; j++) {
 					var type = types[j];
-					console.log("path type="+type);
 					var segment = path.segments[i];
 					var segmentPoint = type == 'point'
 							? segment.point
 							: segment.point + segment[type];
-					console.log("segment.point="+segment.point);
 					var distance = (point - segmentPoint).length;
-					console.log('distance='+segment.point);
 					if (distance < 3) {
 						return {
 							type: type,
@@ -33,9 +30,8 @@
 
 		var currentSegment, mode, type;
 		function onMouseDown(event) {
-			if (currentSegment){
+			if (currentSegment)
 				currentSegment.selected = false;
-			}
 			mode = type = currentSegment = null;
 
 			if (!path) {
@@ -49,7 +45,6 @@
 			}
 
 			var result = findHandle(event.point);
-			console.log('handle result='+result);
 			if (result) {
 				currentSegment = result.segment;
 				type = result.type;
@@ -71,7 +66,6 @@
 		}
 
 		function onMouseDrag(event) {
-			//console.log(event.delta);
 			if (mode == 'move' && type == 'point') {
 				currentSegment.point = event.point;
 			} else if (mode != 'close') {

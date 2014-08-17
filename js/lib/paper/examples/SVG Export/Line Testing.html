@@ -4,6 +4,8 @@
 	<meta charset="UTF-8">
 	<title>Line Testing</title>
 	<link rel="stylesheet" href="../css/style.css">
+    <!-- IE 9: display inline SVG -->
+    <meta http-equiv="X-UA-Compatible" content="IE=9">
 	<script type="text/javascript" src="../../dist/paper-full.js"></script>
 	<script type="text/paperscript" canvas="canvas">
 		var x1 = 5,
@@ -30,11 +32,10 @@
 		line3.strokeColor = "yellow";
 		line3.strokeWidth = "5";
 
-		document.getElementById('svg').appendChild(project.exportSVG());
+		document.body.appendChild(project.exportSVG());
 	</script>
 </head>
 <body>
 	<canvas id="canvas" width="500" height="500"></canvas>
-	<svg id="svg" width="500" height="500"></svg>
 </body>
 </html>
