@@ -568,8 +568,9 @@ define([
       if (selectTool.selectedNodes.length > 0) {
 
         for (var i = 0; i < selectTool.selectedNodes.length; i++) {
+        //TODO: eventually will need a method of updating the correct copy behavior to update (ie via scope)
 
-          selectTool.selectedNodes[i].incrementCopyNum(number);
+          selectTool.selectedNodes[i].getBehaviorByName('copy').incrementCopyNum(number);
         }
       }
       currentNode.setup([{}]);

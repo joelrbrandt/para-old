@@ -315,7 +315,7 @@ define([
         var b = this.behaviors[m].behavior.exportJSON();
         //TODO: Fix this hack
         if (this.behaviors[m].behavior.type === 'copy') {
-          b.copyNum = this.instances.length;
+          this.behaviors[m].copyNum = this.instances.length;
         }
         var jconditions = [];
         var jconstraints = [];
@@ -390,6 +390,11 @@ define([
     },
 
     setup: function(data){
+      var appBehaviors = this.getBehaviorsWithMethod('setup');
+      for(var j=0;j<appBehaviors.length;j++){
+        appBehaviors[j].behavior.setup(data);
+
+      }
       for(var i=0;i<this.instances.length;i++){
         this.instances[i].rotation.angle=0;
       }
@@ -408,6 +413,11 @@ define([
 
     calculate: function(data, index) {
       ////console.log("geom calculate for index:" + index);
+      var appBehaviors = this.getBehaviorsWithMethod('calculate');
+      for(var j=0;j<appBehaviors.length;j++){
+        appBehaviors[j].behavior.calculate(data,index);
+
+      }
       for (var i = 0; i < data.length; i++) {
         var instance = this.instances[index];
         instance.update(data[i]);
@@ -417,6 +427,12 @@ define([
 
     clean: function(data) {
       ////console.log("clean geom");
+      var appBehaviors = this.getBehaviorsWithMethod('clean');
+
+       for(var j=0;j<appBehaviors.length;j++){
+       appBehaviors[j].behavior.clean(data);
+
+      }
       for (var k = 0; k < this.children.length; k++) {
         this.children[k].setup([{}]);
       }
@@ -726,8 +742,8 @@ define([
     },
 
     addBehavior: function(behavior, methods, index) {
-      _.defaults(this, behavior);
-
+     // _.defaults(this, behavior);
+     behavior.setDatatype(this);
       if (index) {
         if (index === 'last') {
           this.behaviors.push({
@@ -747,9 +763,9 @@ define([
           methods: methods
         });
       }
-      for (var i = 0; i < methods.length; i++) {
+      /*for (var i = 0; i < methods.length; i++) {
         this.override(methods[i]);
-      }
+      }*/
     },
 
     removeBehavior: function(name) {
@@ -765,12 +781,12 @@ define([
       for (var i = 0; i < toRemove.length; i++) {
         //TODO: fix this hack- will remove user defined rotation
         if (toRemove[i].behavior.type === 'distribution') {
-          this.distributionReset();
+          toRemove[i].behavior.distributionReset();
         }
         var methods = toRemove[i].methods;
-        for (var j = 0; j < methods.length; j++) {
+       /* for (var j = 0; j < methods.length; j++) {
           this.override(methods[j]);
-        }
+        }*/
       }
     },
 

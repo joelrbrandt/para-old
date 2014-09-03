@@ -42,6 +42,10 @@ define([
 				return jdata;
 			},
 
+			setDatatype: function(data){
+				this.datatype = data;
+			},
+
 
 
 			addConstraint: function(constraint) {
