@@ -12,7 +12,7 @@ define([
         this.color = null;
       },
 
-      update: function(data) {
+      setup: function(data) {
 
       },
 

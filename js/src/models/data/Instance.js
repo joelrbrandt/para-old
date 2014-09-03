@@ -251,6 +251,18 @@ define([
 			return {x:this.position.x+this.delta.x+this.width/2,y:this.position.y+this.delta.y+this.height/2};
 		},
 
+		getWindowCoordinates: function(){
+			var path = this.nodeParent.getLiteral();
+			if(path!=null){
+				path = path.clone();
+				path.transform(this.matrix);
+				var center = path.bounds.center;
+				path.remove();
+				return center;
+			}
+			return null;
+		},
+
 
 	
 
@@ -301,6 +313,15 @@ define([
 				 this.nodeParent.addScaffold(mP);
 				uLP.transform(this.matrix);
 				mP.transform(this.matrix);
+				var bb = new paper.Path.Rectangle(new paper.Point(this.position.x-this.width/2,this.position.y-this.height/2),new paper.Size(this.width,this.height));
+				bb.strokeColor = 'orange';
+				bb.transform(this.matrix);
+				
+
+				 this.nodeParent.addScaffold(bb);
+					
+
+
 			}*/
 				
 			//}
@@ -322,8 +343,6 @@ define([
 			if(data.fillColor){
 				this.fillColor = data.fillColor;
 			}*/
-
-
 
 		},
 

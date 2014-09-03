@@ -24,7 +24,7 @@ define([
       },
 
 
-      update: function() {
+      setup: function() {
         var num = this.instances.length;
         this.middle = Math.round(num / 2);
         var pointA = this.instances[0].delta;

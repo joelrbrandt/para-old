@@ -31,7 +31,7 @@ define([
         return BaseBehavior.prototype.exportJSON.apply(this, [jdata]);
       },
 
-      update: function(data) {
+     setup: function(data) {
         //checks to see if we have the correct number of copies
         var numInstances = this.instances.length;
         if (numInstances < this.copyNum) {
