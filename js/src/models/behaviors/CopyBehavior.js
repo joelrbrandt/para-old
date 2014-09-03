@@ -33,6 +33,8 @@ define([
 
      setup: function(data) {
         //checks to see if we have the correct number of copies
+        console.log("copy setup")
+        console.log("datatype ="+this.datatype.instances.length);
         var numInstances = this.datatype.instances.length;
         if (numInstances < this.copyNum) {
           var newCopy = this.copyNum - numInstances;
@@ -41,12 +43,14 @@ define([
             var selected = this.datatype.instances[this.datatype.instances.length - 1];
             var index;
             if (!selected) {
+               console.log('selected:' + selected.index);
               selected = this.datatype.instances[0];
               index = 1;
             } else {
-              //console.log('selected:' + selected.index);
-              index = selected.index + 1;
-              //console.log('index:' + index);
+             console.log('selected:' + selected.index);
+             console.log('correct index:', this.datatype.instances.length - 1);
+              index = selected.index;
+              console.log('index:' + index);
 
             }
 
@@ -56,13 +60,14 @@ define([
             var instance = this.datatype.createInstanceAt(selected, index);
             // //console.log('creating instance'+instance);
             instance.copy = true;
-
-            instance.increment({
+            console.log("inserted index="+instance.index);
+              console.log("datatype ="+this.datatype.instances.length);
+            /*instance.increment({
               delta: {
                 x: 10,
                 y: 10
               }
-            });
+            });*/
             instance.anchor = false;
             instance.selected = false;
           }

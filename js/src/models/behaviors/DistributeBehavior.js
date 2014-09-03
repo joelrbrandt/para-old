@@ -22,15 +22,18 @@ define([
 
 
      setup: function(data) {
-
+        console.log("dist setup")
         var num = this.datatype.instances.length;
         this.pointA = this.datatype.instances[0].delta;
         this.pointB = this.datatype.instances[num - 1].delta;
+
         if (TrigFunc.equals(this.pointA, this.pointB)) {
+          console.log("adjusting_position");
           this.datatype.instances[num - 1].delta.x += 40;
           this.datatype.instances[num - 1].delta.y += 40;
           this.pointB = this.datatype.instances[num - 1].delta;
         }
+           console.log('pointB.delta=',this.pointB);
         var selected = this.datatype.getFirstSelectedInstance();
        this.xDiff = (this.pointB.x - this.pointA.x) / (num - 1);
       this.yDiff = (this.pointB.y - this.pointA.y) / (num - 1);
@@ -49,6 +52,7 @@ define([
       },
 
       calculate: function(data, index) {
+         console.log("dist calculate");
         var x = this.pointA.x + this.xDiff * index;
         var y = this.pointA.y + this.yDiff * index;
         if (index===0|| index===this.datatype.instances.length-1){

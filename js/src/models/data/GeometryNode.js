@@ -377,6 +377,9 @@ define([
     removeInstanceAt: function(index) {
       this.getUpperLeft();
       this.instances.splice(index, 1);
+       for (var i = 0; i < this.instances.length; i++) {
+          this.instances[i].index = i;
+        }
     },
 
     getInstancesofParent: function(index) {
@@ -758,7 +761,7 @@ define([
 
         }
       } else {
-        this.behaviors.splice(this.behaviors.length - 2, 0, {
+        this.behaviors.push({
           behavior: behavior,
           methods: methods
         });

@@ -65,7 +65,7 @@ define([
         this.addCopyBehavior(nodes, 2, data);
       } else if (name == 'linear') {
         if (!data) {
-          if (!nodes[0].copyNum) {
+          if (!nodes[0].getBehaviorByName('copy')) {
             this.addCopyBehavior(nodes, 3);
           } else {
             this.addCopyBehavior(nodes);
@@ -76,7 +76,8 @@ define([
       } else if (name == 'radial') {
         //console.log("adding radial behavior");
         if (!data) {
-          if (!nodes[0].copyNum) {
+          if (!nodes[0].getBehaviorByName('copy'))
+           {
             this.addCopyBehavior(nodes, 6);
           } else {
             this.addCopyBehavior(nodes);
@@ -85,7 +86,7 @@ define([
         this.addRadialBehavior(nodes, data);
       } else if (name == 'followpath') {
         if (!data) {
-          if (!nodes[0].copyNum) {
+          if (!nodes[0].getBehaviorByName('copy')) {
             this.addCopyBehavior(nodes, 4);
           } else {
             this.addCopyBehavior(nodes);
@@ -110,7 +111,7 @@ define([
         var node = nodes[i];
         var containsCopy = node.containsBehaviorType('copy');
         if (!containsCopy) {
-          nodes[i].addBehavior(copyBehavior, ['setup'], 'last');
+          nodes[i].addBehavior(copyBehavior, ['setup'], 'first');
         }
         //TODO: eventually will need a method of updating the correct copy behavior to update (ie via scope)
         if (data) {
@@ -125,7 +126,7 @@ define([
     },
 
     addFollowPathBehavior: function(nodes, data) {
-      nodes[0].copyNum = 1;
+      nodes[0].getBehaviorByName('copy').setCopyNum(1);
       nodes[0].nodeParent.instances[0].position = {
         x: nodes[0].instances[0].position.x,
         y: nodes[0].instances[0].position.y
