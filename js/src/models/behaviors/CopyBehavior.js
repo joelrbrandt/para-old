@@ -33,15 +33,15 @@ define([
 
      setup: function(data) {
         //checks to see if we have the correct number of copies
-        var numInstances = this.instances.length;
+        var numInstances = this.datatype.instances.length;
         if (numInstances < this.copyNum) {
           var newCopy = this.copyNum - numInstances;
 
           for (var i = 0; i < newCopy; i++) {
-            var selected = this.instances[this.instances.length - 1];
+            var selected = this.datatype.instances[this.datatype.instances.length - 1];
             var index;
             if (!selected) {
-              selected = this.instances[0];
+              selected = this.datatype.instances[0];
               index = 1;
             } else {
               //console.log('selected:' + selected.index);
@@ -53,7 +53,7 @@ define([
             // //console.log('no selected instance found, making copy from first');
             //target = child.instances[0];
             //console.log('creating instance at' + index);
-            var instance = this.createInstanceAt(selected, index);
+            var instance = this.datatype.createInstanceAt(selected, index);
             // //console.log('creating instance'+instance);
             instance.copy = true;
 
@@ -68,7 +68,7 @@ define([
           }
         } else if (numInstances > this.copyNum) {
           var start= numInstances-2;
-          if(!this.containsBehaviorType('distribution')){
+          if(!this.datatype.containsBehaviorType('distribution')){
             start = numInstances-1;
           }
           
@@ -78,7 +78,7 @@ define([
            
            
 
-              this.removeInstanceAt(k);
+              this.datatype.removeInstanceAt(k);
             
             //TODO: what happens when there are only 2 instances left?
           }
@@ -95,7 +95,7 @@ define([
       incrementCopyNum: function(data) {
         this.copyNum += data;
         if (this.copyNum < 2) {
-          if (this.containsBehaviorType('distribution')) {
+          if (this.datatype.containsBehaviorType('distribution')) {
             this.copyNum = 2;
           }
           if (this.copyNum < 1) {

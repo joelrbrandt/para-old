@@ -112,11 +112,12 @@ define([
         if (!containsCopy) {
           nodes[i].addBehavior(copyBehavior, ['setup'], 'last');
         }
+        //TODO: eventually will need a method of updating the correct copy behavior to update (ie via scope)
         if (data) {
-          node.setCopyNum(data.copyNum);
+          node.getBehaviorByName('copy').setCopyNum(data.copyNum);
         } else {
           if (copyNum) {
-            node.setCopyNum(copyNum);
+            node.getBehaviorByName('copy').setCopyNum(copyNum);
           }
         }
         node.setup([{}]);

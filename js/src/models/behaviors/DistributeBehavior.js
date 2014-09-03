@@ -23,15 +23,15 @@ define([
 
      setup: function(data) {
 
-        var num = this.instances.length;
-        this.pointA = this.instances[0].delta;
-        this.pointB = this.instances[num - 1].delta;
+        var num = this.datatype.instances.length;
+        this.pointA = this.datatype.instances[0].delta;
+        this.pointB = this.datatype.instances[num - 1].delta;
         if (TrigFunc.equals(this.pointA, this.pointB)) {
-          this.instances[num - 1].delta.x += 40;
-          this.instances[num - 1].delta.y += 40;
-          this.pointB = this.instances[num - 1].delta;
+          this.datatype.instances[num - 1].delta.x += 40;
+          this.datatype.instances[num - 1].delta.y += 40;
+          this.pointB = this.datatype.instances[num - 1].delta;
         }
-        var selected = this.getFirstSelectedInstance();
+        var selected = this.datatype.getFirstSelectedInstance();
        this.xDiff = (this.pointB.x - this.pointA.x) / (num - 1);
       this.yDiff = (this.pointB.y - this.pointA.y) / (num - 1);
         var dist = TrigFunc.distance(this.pointA, {
@@ -51,13 +51,13 @@ define([
       calculate: function(data, index) {
         var x = this.pointA.x + this.xDiff * index;
         var y = this.pointA.y + this.yDiff * index;
-        if (index===0|| index===this.instances.length-1){
-          this.instances[index].anchor=true;
+        if (index===0|| index===this.datatype.instances.length-1){
+          this.datatype.instances[index].anchor=true;
         }
         else{
-          this.instances[index].anchor=false;
+          this.datatype.instances[index].anchor=false;
         }
-        this.instances[index].update({
+        this.datatype.instances[index].update({
           delta: {
             x: x,
             y: y

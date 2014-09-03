@@ -43,8 +43,8 @@ define([
       }
 
 
-      var fillBehavior = new FillBehavior();
-      this.addBehavior(fillBehavior, ['setup']);
+     // var fillBehavior = new FillBehavior();
+     // this.addBehavior(fillBehavior, ['setup']);
       /*var copyBehavior = new CopyBehavior();
       this.addBehavior(copyBehavior, ['update'], 'last');
       this.setCopyNum(1);*/
