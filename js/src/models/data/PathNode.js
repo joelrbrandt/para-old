@@ -44,7 +44,7 @@ define([
 
 
       var fillBehavior = new FillBehavior();
-      this.addBehavior(fillBehavior, ['update']);
+      this.addBehavior(fillBehavior, ['setup']);
       /*var copyBehavior = new CopyBehavior();
       this.addBehavior(copyBehavior, ['update'], 'last');
       this.setCopyNum(1);*/
@@ -79,8 +79,8 @@ define([
     createInstanceFromPath: function(path) {
       var instance = this.createInstance();
       var delta = {
-        x: path.bounds.center.x,
-        y: path.bounds.center.y
+        x:path.bounds.center.x,
+        y:path.bounds.center.y
       };
       var rotation = {
         angle: 0
@@ -105,8 +105,8 @@ define([
 
 
       this.masterPath = path;
-      this.masterPath.visible = false;
-      this.masterPath.strokeColor = null;
+      this.masterPath.visible = true;
+      this.masterPath.strokeColor = 'red';
       this.masterPath.fillColor = null;
 
       path.instanceParentIndex = this.instances.length - 1;
@@ -154,8 +154,10 @@ define([
     },
 
     //called when path points are modified 
-    updatePath: function(index, delta, handle) {
+    updatePath: function(index, delta, handle, instanceIndex) {
       var newPath = this.masterPath.clone();
+      var sInst = this.instances[instanceIndex];
+      newPath.rotate(sInst.rotation.angle, 0, 0);
 
       //update the path
       var selSegment = newPath.segments[index];
@@ -175,36 +177,45 @@ define([
         }
       }
 
-      var topLeftOld = this.masterPath.bounds.center;
-      var topLeftNew = newPath.bounds.center;
+      newPath.rotate(-sInst.rotation.angle, 0, 0);
+      var centerOld = this.masterPath.bounds.center;
+      var centerNew = newPath.bounds.center;
       //calcualte differences between old and new positions
-      var diff = TrigFunc.subtract({
-        x: topLeftNew.x,
-        y: topLeftNew.y
+
+      var cV = centerNew.subtract(centerOld);
+      cV.rotate(sInst.rotation.angle);
+
+     /* var diff = TrigFunc.subtract({
+        x: centerNew.x,
+        y: centerNew.y
       }, {
-        x: topLeftOld.x,
-        y: topLeftOld.y
-      });
+        x: centerOld.x,
+        y: centerOld.y
+      });*/
 
       //set position to upper left corner
-      newPath.position.x = 0;
-      newPath.position.y = 0;
+     newPath.position.x = 0;
+     newPath.position.y = 0;
 
-      for (var i = 0; i < this.instances.length; i++) {
+     for (var i = 0; i < this.instances.length; i++) {
+       
         this.instances[i].update({
           width: newPath.bounds.width,
           height: newPath.bounds.height
         });
         this.instances[i].increment({
-          delta: diff
+          delta: {
+            x: cV.x,
+            y: cV.y
+          }
         });
       }
 
       //swap out old master for new
       this.masterPath.remove();
       this.masterPath = newPath;
-      this.masterPath.visible = false;
-      this.masterPath.strokeColor = null;
+      this.masterPath.visible = true;
+      this.masterPath.strokeColor = 'red';
       this.masterPath.fillColor = null;
 
 
@@ -274,20 +285,20 @@ define([
                 }
               }
             } else {
-              if(this.scaffold){
-                instance_literal.visible=false;
+              if (this.scaffold) {
+                instance_literal.visible = false;
               }
               var descendant = currentNode.descendantOf(this);
-              if(!descendant){
-                if(instance_literal.fillColor){
-                 instance_literal.fillColor.lightness=0.75;
-               }
-               if(instance_literal.strokeColor){
-                 instance_literal.strokeColor.lightness=0.75;
-               }
+              if (!descendant) {
+                if (instance_literal.fillColor) {
+                  instance_literal.fillColor.lightness = 0.75;
+                }
+                if (instance_literal.strokeColor) {
+                  instance_literal.strokeColor.lightness = 0.75;
+                }
               }
 
-              
+
               instance_literal.selected = data[d].selected;
               if (data[d].anchor) {
                 if (d === 0) {
@@ -301,8 +312,7 @@ define([
                 }
               }
             }
-         
-            
+
 
 
             this.instance_literals.push(instance_literal);

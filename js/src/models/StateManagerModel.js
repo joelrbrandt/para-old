@@ -209,7 +209,7 @@ define([
       this.modified = true;
       this.trigger('disableSave',!this.modified);
 
-      rootNode.update([{}]);
+      rootNode.setup([{}]);
 
     },
     currentRender: function() {
@@ -534,7 +534,7 @@ define([
           }]);
         }
       }
-      currentNode.update([{}]);
+      currentNode.setup([{}]);
       this.rootRender();
       paper.view.draw();
     },
@@ -559,7 +559,7 @@ define([
           selectTool.selectedNodes[i].updateSelected(update);
         }
       }
-      currentNode.update([{}]);
+      currentNode.setup([{}]);
       this.rootRender();
       paper.view.draw();
     },
@@ -572,7 +572,7 @@ define([
           selectTool.selectedNodes[i].incrementCopyNum(number);
         }
       }
-      currentNode.update([{}]);
+      currentNode.setup([{}]);
       this.rootRender();
       paper.view.draw();
     },
@@ -583,7 +583,7 @@ define([
           selectTool.selectedNodes[i].deleteNode();
         }
       }
-      currentNode.update([{}]);
+      currentNode.setup([{}]);
       this.rootRender();
       paper.view.draw();
     },

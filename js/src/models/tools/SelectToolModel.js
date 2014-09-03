@@ -126,7 +126,7 @@ define([
           if (this.currentNode) {
             var selPath = this.selectedNodes[this.selectedNodes.length - 1].instance_literals[instanceIndex];
             if (selPath && selPath.nodeParent.type === 'path') {
-              selPath.nodeParent.updatePath(segment,event.delta,handle);
+              selPath.nodeParent.updatePath(segment,event.delta,handle,instanceIndex);
               this.trigger('rootUpdate');
               this.trigger('rootRender');
             }
@@ -137,12 +137,11 @@ define([
           if (this.currentNode) {
 
             for (var i = 0; i < this.selectedNodes.length; i++) {
-              this.selectedNodes[i].updateSelected([{
+            this.selectedNodes[i].updateSelected([{
                delta: {
                   x: event.delta.x,
                   y: event.delta.y
-                },
-                relative: event.point
+                }
               }]);
             }
             this.trigger('rootUpdate');

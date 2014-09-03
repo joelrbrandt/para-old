@@ -10,9 +10,10 @@ define([
   'models/behaviors/CopyBehavior',
   'models/behaviors/DistributeBehavior',
   'models/behaviors/RadialDistributeBehavior',
-  'models/behaviors/FollowPathBehavior'
+  'models/behaviors/FollowPathBehavior',
+  'models/behaviors/RotateBehavior',
 
-], function($, _, Backbone, TrigFunc, GeometryNode, CopyBehavior, DistributeBehavior, RadialDistributeBehavior, FollowPathBehavior) {
+], function($, _, Backbone, TrigFunc, GeometryNode, CopyBehavior, DistributeBehavior, RadialDistributeBehavior, FollowPathBehavior, RotateBehavior) {
   var nameVal = 0;
   var BehaviorManagerModel = Backbone.Model.extend({
 
@@ -32,7 +33,7 @@ define([
 
       for (var i = 0; i < nodes.length; i++) {
         nodes[0].addCondition(null, 'color', conditional_node, null);
-        nodes[0].update([{}]);
+        nodes[0].setup([{}]);
 
       }
     },
@@ -94,7 +95,7 @@ define([
 
       }
 
-      behaviorNode.update([{}]);
+      behaviorNode.setup([{}]);
       this.event_bus.trigger('rootRender');
       this.event_bus.trigger('moveDownNode', nodes[0].instance_literals[0]);
 
@@ -109,7 +110,7 @@ define([
         var node = nodes[i];
         var containsCopy = node.containsBehaviorType('copy');
         if (!containsCopy) {
-          nodes[i].addBehavior(copyBehavior, ['update'], 'last');
+          nodes[i].addBehavior(copyBehavior, ['setup'], 'last');
         }
         if (data) {
           node.setCopyNum(data.copyNum);
@@ -118,7 +119,7 @@ define([
             node.setCopyNum(copyNum);
           }
         }
-        node.update([{}]);
+        node.setup([{}]);
       }
     },
 
@@ -133,20 +134,26 @@ define([
         x: 0,
         y: 0
       };
-      var followPathBehavior;
+      var followPathBehavior, rotateBehavior;
       var start = 1;
       if (data) {
         //console.log('follow path data');
         followPathBehavior = new FollowPathBehavior(nodes[0].nodeParent.getChildAt(0));
+        rotateBehavior = new RotateBehavior();
         start = 0;
         for (var i = start; i < nodes.length; i++) {
-          nodes[i].addBehavior(followPathBehavior, ['update', 'calculate', 'clean']);
+          nodes[i].addBehavior(rotateBehavior, ['setup', 'calculate', 'clean']);
+          nodes[i].addBehavior(followPathBehavior, ['setup', 'calculate', 'clean']);
+
         }
       } else {
         followPathBehavior = new FollowPathBehavior(nodes[0]);
+         rotateBehavior = new RotateBehavior();
         nodes[0].scaffold=true;
         for (var i = start; i < nodes.length; i++) {
-          nodes[i].addBehavior(followPathBehavior, ['update', 'calculate', 'clean']);
+           nodes[i].addBehavior(rotateBehavior, ['setup', 'calculate', 'clean']);
+          nodes[i].addBehavior(followPathBehavior, ['setup', 'calculate', 'clean']);
+         
           nodes[i].instances[0].delta.x = nodes[0].getLiteral().firstSegment.point.x;
           nodes[i].instances[0].delta.y =  nodes[0].getLiteral().firstSegment.point.y;
           nodes[i].instances[nodes[i].instances.length-1].delta.x = nodes[0].getLiteral().lastSegment.point.x;
@@ -170,7 +177,7 @@ define([
           }
         }
 
-        node.addBehavior(radialBehavior, ['update', 'calculate', 'clean']);
+        node.addBehavior(radialBehavior, ['setup', 'calculate', 'clean']);
 
       }
     },
@@ -190,7 +197,7 @@ define([
           }
         }
 
-        node.addBehavior(linearBehavior, ['update', 'calculate', 'clean']);
+        node.addBehavior(linearBehavior, ['setup', 'calculate', 'clean']);
 
       }
     },

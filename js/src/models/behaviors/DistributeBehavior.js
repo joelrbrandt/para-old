@@ -21,7 +21,7 @@ define([
 
 
 
-      update: function(data) {
+     setup: function(data) {
 
         var num = this.instances.length;
         this.pointA = this.instances[0].delta;

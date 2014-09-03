@@ -11,6 +11,7 @@ define([
     var FollowPathBehavior = BaseBehavior.extend({
       name: 'followpath',
       type: 'distribution',
+
       constructor: function(pathChild) {
         this.pathChild = pathChild;
         this.finalPath = null;
@@ -18,7 +19,7 @@ define([
         this.location = 0;
       },
 
-      update: function(data) {
+      setup: function(data) {
         //console.log('follow path update'+ this.name);
       // console.log('number of target instances for follow path=' + this.instances.length);
         var zeroedPath = this.pathChild.getLiteral().clone();
@@ -96,6 +97,8 @@ define([
 
 
       calculate: function(data, index) {
+       console.log("follow path calculate called");
+
         this.followPath(index);
       
         if (index === 0 || index === this.instances.length - 1) {
@@ -135,8 +138,9 @@ define([
         
       
         var angle = normal.angle;
+        this.setRotation(angle);
         console.log("normal");
-        console.log(normal.angle)
+        console.log(normal.angle);
         console.log(normal.quadrant);
        var  magnitude=100;
        
@@ -153,11 +157,11 @@ define([
           delta: difference
         });
        
-         instance.update({
+         /*instance.update({
           rotation: {
             angle: angle
           }
-        });
+        });*/
 
       
 

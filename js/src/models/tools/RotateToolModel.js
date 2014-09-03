@@ -52,13 +52,14 @@ var paper = PaperManager.getPaperInstance();
     //mouse drag event
     mouseDrag: function(event) {
         if(this.selectedNodes.length>0){
-      var pos = this.selectedNodes[this.selectedNodes.length-1].getFirstSelectedInstance().delta;
-      console.log("pos=",pos);
-      var posPoint = new paper.Point(pos.x,pos.y);
+           var pos = this.selectedNodes[this.selectedNodes.length-1].getFirstSelectedInstance().delta
+      var posPoint = this.selectedNodes[this.selectedNodes.length-1].getFirstSelectedInstance().getWindowCoordinates();
+        console.log("pos=",pos,"posPoint=",posPoint);
+      //var posPoint = new paper.Point(pos.x,pos.y);
       var cAngle = event.point.subtract(posPoint).angle;
-        console.log("angle="+cAngle);
+      //  console.log("angle="+cAngle);
       var rotate = cAngle-this.angle
-      console.log("diff="+rotate);
+     // console.log("diff="+rotate);
       this.selectedNodes[this.selectedNodes.length-1].getFirstSelectedInstance().rotation.angle = this.startAngle+rotate;
        this.trigger('rootUpdate');
               this.trigger('rootRender');

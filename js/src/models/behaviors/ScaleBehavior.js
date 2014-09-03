@@ -17,13 +17,9 @@ define([
         this.min = data.min;
       },
 
-       //called when node is assigned the behavior
-      setup: function(data) {
-        ////console.log('scale behavior interesection found called');
+    
 
-      },
-
-      update: function() {
+      setup: function() {
        // //console.log('scale behavior update called');
         if(this.nodeParent.nodeParent){
           this.iterativeScale(this.getParentNode().instances[0].data);

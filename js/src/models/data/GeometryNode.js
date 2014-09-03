@@ -84,6 +84,12 @@ define([
       this.setCopyNum(1); */
     },
 
+    /* TODO: recursive get literal function */
+    getLiteral: function() {
+      return null;
+
+    },
+
     setOriginByChild: function(index) {
       this.childCenter = index;
 
@@ -383,11 +389,11 @@ define([
       return iInstances;
     },
 
-
-    //updates instances according to data and the passes the updated instances to child function
-    update: function(data) {
+    setup: function(data){
+      for(var i=0;i<this.instances.length;i++){
+        this.instances[i].rotation.angle=0;
+      }
       this.loop(data);
-
     },
 
     loop: function(data) {
@@ -412,7 +418,7 @@ define([
     clean: function(data) {
       ////console.log("clean geom");
       for (var k = 0; k < this.children.length; k++) {
-        this.children[k].update([{}]);
+        this.children[k].setup([{}]);
       }
       if (this.nodeParent !== null && this.nodeParent.type !== 'root') {
         this.nodeParent.updateOrigin();
@@ -438,7 +444,6 @@ define([
 
 
     },
-
 
     reset: function() {
       for (var j = 0; j < this.instances.length; j++) {

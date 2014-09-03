@@ -35,7 +35,7 @@ define([
 
 		//only called on a update function- 
 		//sets instances' properties to that of the data
-		update: function(data){
+		setup: function(data){
 			
 
 
