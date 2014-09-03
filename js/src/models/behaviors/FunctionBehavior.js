@@ -2,21 +2,17 @@
  * creates a radial distirbution defined by anchors
  */
 define([
-    'models/behaviors/BaseBehavior',
-    'models/PaperManager',
-    'utils/TrigFunc'
+    'models/behaviors/Generator'
   ],
 
-  function(BaseBehavior, PaperManager, TrigFunc) {
-    var paper = PaperManager.getPaperInstance();
+  function(Generator) {
 
-    var FunctionBehavior = BaseBehavior.extend({
+    var FunctionBehavior = Generator.extend({
       name: 'function',
       type: 'abstract',
       constructor: function() {
+        Generator.apply(this, arguments);
         this.executed = false;
-        this.behaviors = [];
-        BehaviorUpdates.call(this);
       },
 
       setup: function(data) {
@@ -25,14 +21,15 @@ define([
 
       loop: function(data) {
       ////console.log("loop geom");
-
-      for (var j = 0; j < this.instances.length; j++) {
-        this.calculate(data, j);
+      for(var i=0;i<this.datatype.instances.length;i++){
+        for (var j = 0; j < this.behaviors.length; j++) {
+          this.behaviors[j].calculate(data, i);
+        }
       }
       
         this.executed = true;
 
-      }
+      },
 
       calculate: function(data) {
         this.loop(data);
@@ -51,5 +48,5 @@ define([
 
     });
 
-    return RotateBehavior;
+    return FunctionBehavior;
   });

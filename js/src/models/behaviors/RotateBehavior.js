@@ -1,15 +1,13 @@
-/*RadialDistributeBehavior.js
- * creates a radial distirbution defined by anchors
+/*RotateBehavior.js
+ * performs a rotation
  */
 define([
     'models/behaviors/BaseBehavior',
-    'models/PaperManager',
-    'utils/TrigFunc'
+ 
   ],
 
-  function(BaseBehavior, PaperManager, TrigFunc) {
-    var paper = PaperManager.getPaperInstance();
-
+  function(BaseBehavior) {
+  
     var RotateBehavior = BaseBehavior.extend({
       name: 'rotate',
       type: 'transform',
@@ -27,8 +25,7 @@ define([
       },
 
       calculate: function(data, index) {
-        console.log("rotate calculate called");
-        this.instances[index].rotation.angle += this.angle;
+        this.datatype.instances[index].rotation.angle += this.angle;
       },
 
       clean: function(data) {
