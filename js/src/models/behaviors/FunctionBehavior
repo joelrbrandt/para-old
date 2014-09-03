@@ -15,6 +15,8 @@ define([
       type: 'abstract',
       constructor: function() {
         this.executed = false;
+        this.behaviors = [];
+        BehaviorUpdates.call(this);
       },
 
       setup: function(data) {
@@ -27,7 +29,8 @@ define([
       for (var j = 0; j < this.instances.length; j++) {
         this.calculate(data, j);
       }
-      this.executed = true;
+      
+        this.executed = true;
 
       }
 

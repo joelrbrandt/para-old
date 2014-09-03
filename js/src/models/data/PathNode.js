@@ -157,6 +157,8 @@ define([
     updatePath: function(index, delta, handle, instanceIndex) {
       var newPath = this.masterPath.clone();
       var sInst = this.instances[instanceIndex];
+      console.log("instance index="+instanceIndex);
+      console.log("total number of instances="+this.instances.length);
       newPath.rotate(sInst.rotation.angle, 0, 0);
 
       //update the path

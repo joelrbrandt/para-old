@@ -126,7 +126,7 @@ define([
           if (this.currentNode) {
             var selPath = this.selectedNodes[this.selectedNodes.length - 1].instance_literals[instanceIndex];
             if (selPath && selPath.nodeParent.type === 'path') {
-              selPath.nodeParent.updatePath(segment,event.delta,handle,instanceIndex);
+              selPath.nodeParent.updatePath(segment,event.delta,handle,selPath.instanceParentIndex);
               this.trigger('rootUpdate');
               this.trigger('rootRender');
             }
