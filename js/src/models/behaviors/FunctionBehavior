@@ -1,0 +1,52 @@
+/*RadialDistributeBehavior.js
+ * creates a radial distirbution defined by anchors
+ */
+define([
+    'models/behaviors/BaseBehavior',
+    'models/PaperManager',
+    'utils/TrigFunc'
+  ],
+
+  function(BaseBehavior, PaperManager, TrigFunc) {
+    var paper = PaperManager.getPaperInstance();
+
+    var FunctionBehavior = BaseBehavior.extend({
+      name: 'function',
+      type: 'abstract',
+      constructor: function() {
+        this.executed = false;
+      },
+
+      setup: function(data) {
+
+      },
+
+      loop: function(data) {
+      ////console.log("loop geom");
+
+      for (var j = 0; j < this.instances.length; j++) {
+        this.calculate(data, j);
+      }
+      this.executed = true;
+
+      }
+
+      calculate: function(data) {
+        this.loop(data);
+      },
+
+      clean: function(data) {
+       this.executed=false;
+
+      },
+
+      getReturn: function(){
+
+      }
+
+
+
+    });
+
+    return RotateBehavior;
+  });
