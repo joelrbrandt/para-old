@@ -11,11 +11,12 @@ define([
   'models/PaperManager',
   'models/data/Condition',
   'models/behaviors/CopyBehavior',
-  'utils/TrigFunc'
+  'utils/TrigFunc',
+    'models/behaviors/BehaviorUpdates'
 
 
 
-], function($, _, SceneNode, Instance, PaperManager, Condition, CopyBehavior, TrigFunc) {
+], function($, _, SceneNode, Instance, PaperManager, Condition, CopyBehavior, TrigFunc, BehaviorUpdates) {
   var paper = PaperManager.getPaperInstance();
 
   Function.prototype.clone = function() {
@@ -58,7 +59,7 @@ define([
         y: 0
       };
       this.childCenter = -1;
-
+      BehaviorUpdates.call(this);
 
       SceneNode.apply(this, arguments);
     },
@@ -361,6 +362,7 @@ define([
         this.instances.splice(index, 0, instance);
         for (var i = 0; i < this.instances.length; i++) {
           this.instances[i].index = i;
+          console.log("after add setting instance to"+i);
         }
       }
 
@@ -379,6 +381,7 @@ define([
       this.instances.splice(index, 1);
        for (var i = 0; i < this.instances.length; i++) {
           this.instances[i].index = i;
+           console.log("after remove setting instance to"+i);
         }
     },
 
@@ -667,54 +670,7 @@ define([
       return false;
     },
 
-    //checks to see if behavior type has been added to this instance
-    containsBehaviorType: function(type) {
-      var indexes = [];
-      for (var i = 0; i < this.behaviors.length; i++) {
-        if (this.behaviors[i].behavior.type === type) {
-
-          indexes.push(i);
-        }
-      }
-      if (indexes.length > 0) {
-        return indexes;
-      }
-      return false;
-
-    },
-
-    //returns first behavior that matches name
-    getBehaviorByName: function(name) {
-      for (var i = 0; i < this.behaviors.length; i++) {
-        if (this.behaviors[i].behavior.name === name) {
-          return this.behaviors[i].behavior;
-        }
-      }
-      return null;
-    },
-
-    getBehaviorByType: function(type) {
-      return _.filter(this.behaviors, function(behavior) {
-        return behavior.behavior.type === type;
-      });
-    },
-
-    //checks by name to see if behavior type has been added to this instance
-    containsBehaviorName: function(name) {
-      var indexes = [];
-      for (var i = 0; i < this.behaviors.length; i++) {
-        if (this.behaviors[i].behavior.name === name) {
-          indexes.push(i);
-        }
-      }
-      if (indexes.length > 0) {
-        return indexes;
-      }
-      return false;
-
-
-    },
-
+ 
     /* placeholder functions for leftOf, rightOf geometric checks */
     instanceSide: function(instance) {
       return -1;
@@ -744,129 +700,6 @@ define([
 
     },
 
-    addBehavior: function(behavior, methods, index) {
-     // _.defaults(this, behavior);
-     behavior.setDatatype(this);
-      if (index) {
-        if (index === 'last') {
-          this.behaviors.push({
-            behavior: behavior,
-            methods: methods
-          });
-        } else {
-          this.behaviors.splice(index, 0, {
-            behavior: behavior,
-            methods: methods
-          });
-
-        }
-      } else {
-        this.behaviors.push({
-          behavior: behavior,
-          methods: methods
-        });
-      }
-      /*for (var i = 0; i < methods.length; i++) {
-        this.override(methods[i]);
-      }*/
-    },
-
-    removeBehavior: function(name) {
-
-      var toRemove = _.filter(this.behaviors, function(behavior) {
-        return behavior.behavior.name === name;
-      });
-      //console.log(toRemove);
-      this.behaviors = _.filter(this.behaviors, function(behavior) {
-        return behavior.behavior.name !== name;
-      });
-
-      for (var i = 0; i < toRemove.length; i++) {
-        //TODO: fix this hack- will remove user defined rotation
-        if (toRemove[i].behavior.type === 'distribution') {
-          toRemove[i].behavior.distributionReset();
-        }
-        var methods = toRemove[i].methods;
-       /* for (var j = 0; j < methods.length; j++) {
-          this.override(methods[j]);
-        }*/
-      }
-    },
-
-    override: function(methodName) {
-      if (!this.methodOverriden(methodName)) {
-        this.originalMethods.push({
-          name: methodName,
-          method: this[methodName].clone()
-        });
-      }
-      var applicableBehaviors = this.getBehaviorsWithMethod(methodName);
-      this[methodName] = this.getOriginal(methodName);
-
-      for (var i = 0; i < applicableBehaviors.length; i++) {
-        var extraBehavior = applicableBehaviors[i].behavior[methodName];
-        var composed = this.before(extraBehavior);
-        this[methodName] = composed(this[methodName]);
-      }
-    },
-
-    methodOverriden: function(methodName) {
-      for (var i = 0; i < this.originalMethods.length; i++) {
-        if (this.originalMethods[i].name === methodName) {
-          return true;
-        }
-      }
-      return false;
-    },
-
-    getOriginal: function(methodName) {
-      for (var i = 0; i < this.originalMethods.length; i++) {
-        if (this.originalMethods[i].name === methodName) {
-          return this.originalMethods[i].method.clone();
-        }
-      }
-      return null;
-    },
-
-    getBehaviorsWithMethod: function(methodName) {
-      return _.filter(this.behaviors, function(behavior) {
-        var found = $.inArray(methodName, behavior.methods);
-        return found !== -1;
-      });
-    },
-
-    before: function(extraBehavior) {
-      return function(original) {
-        return function() {
-          extraBehavior.apply(this, arguments);
-          return original.apply(this, arguments);
-        };
-      };
-    },
-
-
-
-    addConstraint: function(constraint) {
-
-    },
-
-    addCondition: function(propA, operator, targetB, propB) {
-      var condition = new Condition(propA, operator, targetB, propB);
-      this.conditions.push(condition);
-    },
-
-    checkConditions: function(instance) {
-      for (var i = 0; i < this.conditions.length; i++) {
-        if (!this.conditions[i].evaluate(instance)) {
-          return false;
-        }
-      }
-      return true;
-    },
-
-    checkConstraints: function(constraint, instance) {
-
-    },
 
 
 
