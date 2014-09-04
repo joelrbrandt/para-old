@@ -76,7 +76,7 @@ define([
     /*called when drawing of the path is complete. 
      * Removes the path and creates one instance
      * in original path location*/
-    createInstanceFromPath: function(path) {
+    setLiteral: function(path) {
       var instance = this.createInstance();
       var delta = {
         x:path.bounds.center.x,

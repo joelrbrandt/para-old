@@ -83,13 +83,14 @@ define([
           instance.parseJSON(dInstances[i]);
         }
       }
+      var generator = new Generator();
+      var iterator = new Iterator();
+      var copyBehavior = new CopyBehavior();
+      iterator.setIteration({init:0,condition:1,increment:1});
+      generator.addBehavior(iterator, ['setup', 'calculate', 'clean'],this);
+      generator.addBehavior(copyBehavior, ['setup', 'calculate', 'clean'],this);
+      this.addBehavior(generator,['setup', 'calculate', 'clean'],this);
 
-
-     /* var copyBehavior = new CopyBehavior();
-      this.addBehavior(copyBehavior,['update'],'last');
-      this.setCopyNum(1); */
-
-      var generator = new Generator()
     },
 
     /* TODO: recursive get literal function */
@@ -249,8 +250,6 @@ define([
      * iterating over the origins of all the instances
      */
     getCenter: function() {
-
-
       var relPos = [];
       for (var i = 0; i < this.instances.length; i++) {
         var rp = this.instances[i].getCenter();
@@ -408,17 +407,14 @@ define([
         appBehaviors[j].behavior.setup(data);
 
       }
-      for(var i=0;i<this.instances.length;i++){
-        this.instances[i].rotation.angle=0;
-      }
       this.loop(data);
     },
 
     loop: function(data) {
       ////console.log("loop geom");
-
-      for (var j = 0; j < this.instances.length; j++) {
-        this.calculate(data, j);
+      var generator = this.getBehaviorByType('generator')[0].behavior;
+      while(!generator.terminate){
+        generator.calculate();
       }
       this.clean(data);
 
