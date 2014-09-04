@@ -11,12 +11,16 @@ define([
   'models/PaperManager',
   'models/data/Condition',
   'models/behaviors/CopyBehavior',
+  'models/behaviors/Generator',
+  'models/behaviors/Iterator',
+  'models/behaviors/TranslateBehavior',
+
   'utils/TrigFunc',
     'models/behaviors/BehaviorUpdates'
 
 
 
-], function($, _, SceneNode, Instance, PaperManager, Condition, CopyBehavior, TrigFunc, BehaviorUpdates) {
+], function($, _, SceneNode, Instance, PaperManager, Condition, CopyBehavior, Generator,Iterator,TranslateBehavior, TrigFunc, BehaviorUpdates) {
   var paper = PaperManager.getPaperInstance();
 
   Function.prototype.clone = function() {
@@ -80,9 +84,12 @@ define([
         }
       }
 
+
      /* var copyBehavior = new CopyBehavior();
       this.addBehavior(copyBehavior,['update'],'last');
       this.setCopyNum(1); */
+
+      var generator = new Generator()
     },
 
     /* TODO: recursive get literal function */
@@ -507,6 +514,7 @@ define([
 
     clearObjects: function() {
       this.instance_literals = [];
+      this.instances = [];
       this.clearScaffolds();
 
       for (var i = 0; i < this.children.length; i++) {
