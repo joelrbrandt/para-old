@@ -29,9 +29,16 @@ define([
 
       },
 
-      calculate: function(data, index) {
-        console.log("translate calculate called");
-        this.datatype.instances[index].delta += this.delta;
+      calculate: function(data) {
+        console.log("translate calculate called for index",data.index);
+
+        console.log("total number of instances for datatype:",this.datatype.instances.length);
+        console.log("translate delta:", this.x,",",this.y);
+        this.datatype.instances[data.index].delta.x +=this.x;
+        this.datatype.instances[data.index].delta.y +=this.y;
+        return {instance:this.datatype.instances[data.index],index:data.index, terminate:false};
+
+
       },
 
       clean: function(data) {

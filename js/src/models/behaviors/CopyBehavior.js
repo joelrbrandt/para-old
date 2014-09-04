@@ -33,7 +33,7 @@ define([
 
      setup: function(data) {
         //checks to see if we have the correct number of copies
-        console.log("copy setup")
+       /* console.log("copy setup")
         console.log("datatype ="+this.datatype.instances.length);
         var numInstances = this.datatype.instances.length;
         if (numInstances < this.copyNum) {
@@ -62,12 +62,7 @@ define([
             instance.copy = true;
             console.log("inserted index="+instance.index);
               console.log("datatype ="+this.datatype.instances.length);
-            /*instance.increment({
-              delta: {
-                x: 10,
-                y: 10
-              }
-            });*/
+            
             instance.anchor = false;
             instance.selected = false;
           }
@@ -87,16 +82,34 @@ define([
             
             //TODO: what happens when there are only 2 instances left?
           }
-        }
+        }*/
 
         //child.instances[child.instances.length-1].anchor=true;
 
 
       },
 
+      calculate: function(data){
+         console.log("copy calculate");
+        if(data.terminate){
+          return {terminate:true};
+        }
+        else{
+          var instance = this.datatype.createInstance();
+          console.log("total number of instances for datatype:",this.datatype.instances.length);
+          return {instance:instance,index:data.index};
+        }
+        
+      },
+
+      clean: function(data){
+
+      },
+
       setCopyNum: function(data) {
         this.copyNum = data;
       },
+
       incrementCopyNum: function(data) {
         this.copyNum += data;
         if (this.copyNum < 2) {

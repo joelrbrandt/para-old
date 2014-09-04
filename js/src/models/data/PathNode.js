@@ -12,9 +12,10 @@ define([
   'models/PaperManager',
   'utils/TrigFunc',
   'models/behaviors/FillBehavior',
-  'models/behaviors/CopyBehavior'
+  'models/behaviors/CopyBehavior',
+  'models/behaviors/TranslateBehavior',
 
-], function(_, GeometryNode, Instance, PaperManager, TrigFunc, FillBehavior, CopyBehavior) {
+], function(_, GeometryNode, Instance, PaperManager, TrigFunc, FillBehavior, CopyBehavior, TranslateBehavior) {
   //drawable paper.js path object that is stored in the pathnode
   var paper = PaperManager.getPaperInstance();
   var PathNode = GeometryNode.extend({
@@ -39,9 +40,9 @@ define([
         var path = new paper.Path();
         path.importJSON(data.masterPath);
         this.masterPath = path;
-        GeometryNode.prototype.initialize.apply(this, arguments);
       }
 
+      GeometryNode.prototype.initialize.apply(this, arguments);
 
      // var fillBehavior = new FillBehavior();
      // this.addBehavior(fillBehavior, ['setup']);
@@ -77,7 +78,7 @@ define([
      * Removes the path and creates one instance
      * in original path location*/
     setLiteral: function(path) {
-      var instance = this.createInstance();
+      
       var delta = {
         x:path.bounds.center.x,
         y:path.bounds.center.y
@@ -87,7 +88,7 @@ define([
       };
       var width = path.bounds.width;
       var height = path.bounds.height;
-      instance.update({
+     /* instance.update({
         delta: delta,
         rotation: rotation,
         width: width,
@@ -96,7 +97,7 @@ define([
         strokeColor: path.strokeColor,
         fillColor: path.fillColor,
         closed: path.closed
-      });
+      });*/
       path.position.x = 0;
       path.position.y = 0;
 
@@ -112,8 +113,11 @@ define([
       path.instanceParentIndex = this.instances.length - 1;
       path.instanceIndex = this.instance_literals.length - 1;
       path.nodeParent = this;
-      this.getUpperLeft();
-      return instance;
+      //this.getUpperLeft();
+      var generator = this.getBehaviorByName('generator');
+      var translate = new TranslateBehavior();
+      translate.setPosition(delta);
+      generator.addBehavior(translate,['setup', 'calculate', 'clean'],this);
 
     },
 
