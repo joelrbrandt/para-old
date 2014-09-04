@@ -6,7 +6,6 @@ define([
   ],
 
   function(BaseBehavior, BehaviorUpdates) {
-    var paper = PaperManager.getPaperInstance();
 
     var Generator = BaseBehavior.extend({
       name: 'generator',
@@ -21,9 +20,9 @@ define([
 
       setup: function(data){
         if(this.behaviors.length>0){
-         var dataR= this.behaviors[0].setup(data);
+         var dataR= this.behaviors[0].behavior.setup(data);
         for (var j = 1; j < this.behaviors.length; j++) {
-           dataR= this.behaviors[0].setup(dataR);
+           dataR= this.behaviors[0].behavior.setup(dataR);
          
         }
         return dataR;
@@ -33,25 +32,23 @@ define([
 
       calculate: function(data) {
          if(this.behaviors.length>0){
-          var dataR= this.behaviors[0].calculate(data,index);
-        for (var j = 0; j < this.behaviors.length; j++) {
-          this.behaviors[j].calculate(data, index);
+          var dataR= this.behaviors[0].behavior.calculate(data);
+        for (var j = 1; j < this.behaviors.length; j++) {
+            console.log(this.behaviors[j].behavior.type);
+            dataR= this.behaviors[j].behavior.calculate(dataR);
+            }
         }
-      }
+        this.terminate = true;
       },
 
       clean: function(data) {
         for (var j = 0; j < this.behaviors.length; j++) {
-          this.behaviors[j].clean(data, index);
+          this.behaviors[j].behavior.clean(data);
         }
         this.terminate = false;
       },
 
-
-
     });
-
-
 
     return Generator;
   });
