@@ -111,7 +111,7 @@ define([
         var node = nodes[i];
         var containsCopy = node.containsBehaviorType('copy');
         if (!containsCopy) {
-          nodes[i].addBehavior(copyBehavior, ['setup'], 'first');
+          nodes[i].addBehavior(copyBehavior, ['setup'], nodes[i], 'first');
         }
         //TODO: eventually will need a method of updating the correct copy behavior to update (ie via scope)
         if (data) {
@@ -144,8 +144,8 @@ define([
         rotateBehavior = new RotateBehavior();
         start = 0;
         for (var i = start; i < nodes.length; i++) {
-          nodes[i].addBehavior(rotateBehavior, ['setup', 'calculate', 'clean']);
-          nodes[i].addBehavior(followPathBehavior, ['setup', 'calculate', 'clean']);
+          nodes[i].addBehavior(rotateBehavior, ['setup', 'calculate', 'clean'], nodes[i]);
+          nodes[i].addBehavior(followPathBehavior, ['setup', 'calculate', 'clean'], nodes[i]);
 
         }
       } else {
@@ -153,8 +153,8 @@ define([
          rotateBehavior = new RotateBehavior();
         nodes[0].scaffold=true;
         for (var i = start; i < nodes.length; i++) {
-           nodes[i].addBehavior(rotateBehavior, ['setup', 'calculate', 'clean']);
-          nodes[i].addBehavior(followPathBehavior, ['setup', 'calculate', 'clean']);
+           nodes[i].addBehavior(rotateBehavior, ['setup', 'calculate', 'clean'], nodes[i]);
+          nodes[i].addBehavior(followPathBehavior, ['setup', 'calculate', 'clean'], nodes[i]);
          
           nodes[i].instances[0].delta.x = nodes[0].getLiteral().firstSegment.point.x;
           nodes[i].instances[0].delta.y =  nodes[0].getLiteral().firstSegment.point.y;
@@ -179,7 +179,7 @@ define([
           }
         }
 
-        node.addBehavior(radialBehavior, ['setup', 'calculate', 'clean']);
+        node.addBehavior(radialBehavior, ['setup', 'calculate', 'clean'],node);
 
       }
     },
@@ -199,7 +199,7 @@ define([
           }
         }
 
-        node.addBehavior(linearBehavior, ['setup', 'calculate', 'clean']);
+        node.addBehavior(linearBehavior, ['setup', 'calculate', 'clean'],node);
 
       }
     },
