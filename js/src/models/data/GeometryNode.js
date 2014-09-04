@@ -402,6 +402,7 @@ define([
     },
 
     setup: function(data){
+      this.instances = [];
       var appBehaviors = this.getBehaviorsWithMethod('setup');
       for(var j=0;j<appBehaviors.length;j++){
         appBehaviors[j].behavior.setup(data);
