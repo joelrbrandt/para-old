@@ -19,6 +19,7 @@ var paper = PaperManager.getPaperInstance();
       this.selectedNodes = [];
       this.angle=0;
       this.startAngle=0;
+      this.selectedIndexes=[];
       
     },
 
@@ -29,10 +30,12 @@ var paper = PaperManager.getPaperInstance();
       console.log('num of selected shapes ='+this.selectedNodes.length);
       if(this.selectedNodes.length>0){
       var pos = this.selectedNodes[this.selectedNodes.length-1].getFirstSelectedInstance().delta;
-    
-      var posPoint = new paper.Point(pos.x,pos.y);
+      for(var i=0;i<this.selectedNodes.length;i++){
+        this.selectedIndexes.push(this.selectedNodes[i].getSelectedIndexes());
+      }
+      var posPoint = this.selectedNodes[this.selectedNodes.length-1].instances[this.selectedIndexes[0]].getWindowCoordinates();
       this.angle = event.point.subtract(posPoint).angle;
-      this.startAngle = this.selectedNodes[this.selectedNodes.length-1].getFirstSelectedInstance().rotation.angle
+     
       console.log(this.angle);
     }
 
@@ -52,17 +55,20 @@ var paper = PaperManager.getPaperInstance();
     //mouse drag event
     mouseDrag: function(event) {
         if(this.selectedNodes.length>0){
-           var pos = this.selectedNodes[this.selectedNodes.length-1].getFirstSelectedInstance().delta
-      var posPoint = this.selectedNodes[this.selectedNodes.length-1].getFirstSelectedInstance().getWindowCoordinates();
-        console.log("pos=",pos,"posPoint=",posPoint);
+        var posPoint = this.selectedNodes[this.selectedNodes.length-1].instances[this.selectedIndexes[0]].getWindowCoordinates();
+        //console.log("pos=",pos,"posPoint=",posPoint);
       //var posPoint = new paper.Point(pos.x,pos.y);
       var cAngle = event.point.subtract(posPoint).angle;
-      //  console.log("angle="+cAngle);
-      var rotate = cAngle-this.angle
-     // console.log("diff="+rotate);
-      this.selectedNodes[this.selectedNodes.length-1].getFirstSelectedInstance().rotation.angle = this.startAngle+rotate;
-       this.trigger('rootUpdate');
-              this.trigger('rootRender');
+      console.log("angle="+cAngle);
+      var rotate = cAngle-this.angle;
+      this.angle = cAngle;
+       console.log("diff="+rotate);
+      for (var i = 0; i < this.selectedNodes.length; i++) {
+            this.selectedNodes[i].updateSelected(this.selectedIndexes[i],{
+               angle: rotate
+              });
+            }      this.trigger('rootUpdate');
+      this.trigger('rootRender');
 
     }
 

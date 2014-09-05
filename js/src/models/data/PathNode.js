@@ -14,8 +14,12 @@ define([
   'models/behaviors/FillBehavior',
   'models/behaviors/CopyBehavior',
   'models/behaviors/TranslateBehavior',
+   'models/behaviors/RotateBehavior',
+  'models/behaviors/StrokeBehavior',
+  'models/behaviors/WeightBehavior',
 
-], function(_, GeometryNode, Instance, PaperManager, TrigFunc, FillBehavior, CopyBehavior, TranslateBehavior) {
+
+], function(_, GeometryNode, Instance, PaperManager, TrigFunc, FillBehavior, CopyBehavior, TranslateBehavior, RotateBehavior, StrokeBehavior, WeightBehavior) {
   //drawable paper.js path object that is stored in the pathnode
   var paper = PaperManager.getPaperInstance();
   var PathNode = GeometryNode.extend({
@@ -115,9 +119,22 @@ define([
       path.nodeParent = this;
       //this.getUpperLeft();
       var generator = this.getBehaviorByName('generator');
+
       var translate = new TranslateBehavior();
-      translate.setPosition(delta);
+      translate.addDelta(delta);
       generator.addBehavior(translate,['setup', 'calculate', 'clean'],this);
+
+      var rotate = new RotateBehavior();
+      rotate.addAngle({angle:0});
+      generator.addBehavior(rotate,['setup', 'calculate', 'clean'],this);
+      
+      var stroke = new StrokeBehavior();
+      stroke.setStroke({color:path.strokeColor});
+      generator.addBehavior(stroke,['setup', 'calculate', 'clean'],this);
+
+      var weight = new WeightBehavior();
+      weight.setWeight({weight:path.strokeWidth});
+      generator.addBehavior(weight,['setup', 'calculate', 'clean'],this);
 
     },
 
@@ -161,8 +178,8 @@ define([
     updatePath: function(index, delta, handle, instanceIndex) {
       var newPath = this.masterPath.clone();
       var sInst = this.instances[instanceIndex];
-      console.log("instance index="+instanceIndex);
-      console.log("total number of instances="+this.instances.length);
+      console.log('instance index='+instanceIndex);
+      console.log('total number of instances='+this.instances.length);
       newPath.rotate(sInst.rotation.angle, 0, 0);
 
       //update the path
@@ -236,13 +253,14 @@ define([
      */
     render: function(data, currentNode) {
       var path_literal = this.getLiteral();
-      // console.log("render: "+this.type);
+      //console.log("num of instances on path render: "+this.instances.length);
       if (data) {
         for (var k = 0; k < this.instances.length; k++) {
 
           for (var d = 0; d < data.length; d++) {
             this.instances[k].instanceParentIndex = d;
 
+            //console.log("style for",k,"=",this.instances[k].strokeWidth, ",",this.instances[k].strokeColor);
             var instance_literal = path_literal.clone();
             instance_literal.nodeParent = this;
             instance_literal.instanceParentIndex = k;
@@ -251,7 +269,9 @@ define([
             var nInstance = this.instances[k];
             nInstance.render(data[d]);
 
+            
             instance_literal = instance_literal.transform(nInstance.matrix);
+            
             if (instance_literal.closed) {
               instance_literal.fillColor = this.instances[k].fillColor;
             }
@@ -315,8 +335,8 @@ define([
                 }
                 if (instance_literal.strokeWidth < 3) {
                   instance_literal.strokeWidth = 3;
-                }
               }
+                }
             }
 
 

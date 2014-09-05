@@ -46,6 +46,10 @@ define([
 				this.datatype = data;
 			},
 
+			update: function(index, data){
+				///do some updating stuff..
+			},
+
 
 
 			addConstraint: function(constraint) {

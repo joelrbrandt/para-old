@@ -90,13 +90,13 @@ define([
       },
 
       calculate: function(data){
-         console.log("copy calculate");
+        // console.log("copy calculate");
         if(data.terminate){
           return {terminate:true};
         }
         else{
           var instance = this.datatype.createInstance();
-          console.log("total number of instances for datatype:",this.datatype.instances.length);
+          //console.log("total number of instances for datatype:",this.datatype.instances.length);
           return {instance:instance,index:data.index};
         }
         
@@ -116,7 +116,7 @@ define([
           if (this.datatype.containsBehaviorType('distribution')) {
             this.copyNum = 2;
           }
-          if (this.copyNum < 1) {
+          if (theis.copyNum < 1) {
             this.copyNum = 1;
           }
         }

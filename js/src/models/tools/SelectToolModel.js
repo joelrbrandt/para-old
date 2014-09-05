@@ -26,6 +26,7 @@ define([
 
     initialize: function() {
       this.selectedNodes = [];
+      this.selectedIndexes = [];
       this.currentPaths = [];
       this.segmentMod = false;
     },
@@ -44,6 +45,7 @@ define([
         segment = null;
         handle = null;
         this.selectedNodes = [];
+        this.selectedIndexes = [];
         this.trigger('selectionReset');
         //console.log("setting selected nodes to null");
       }
@@ -79,12 +81,15 @@ define([
 
         //checks to make sure path is within current node
         if (this.selectedNodes.length > 0) {
+        
           if (this.currentNode.containsPath(path)) {
             if (this.currentPaths.indexOf(path) == -1) {
               this.currentPaths.push(path);
             }
             this.trigger('setSelection', path);
-
+          for(var i=0;i<this.selectedNodes.length;i++){
+              this.selectedIndexes.push(this.selectedNodes[i].getSelectedIndexes());
+            }
             if (event.modifiers.option) {
               this.trigger('optionClick', this.selectedNodes[this.selectedNodes.length - 1]);
             }
@@ -137,12 +142,12 @@ define([
           if (this.currentNode) {
 
             for (var i = 0; i < this.selectedNodes.length; i++) {
-            this.selectedNodes[i].updateSelected([{
+            this.selectedNodes[i].updateSelected(this.selectedIndexes[i],{
                delta: {
                   x: event.delta.x,
                   y: event.delta.y
                 }
-              }]);
+              });
             }
             this.trigger('rootUpdate');
             this.trigger('rootRender');
