@@ -31,16 +31,13 @@ define([
       },
 
       calculate: function(data) {
-        console.log("generator calculate for",this.datatype.type);
+        //if(this.datatype.type!= 'root'){
+         // console.log("generator calculate for",this.datatype.type);
+        //}
          if(this.behaviors.length>0){
           var dataR= this.behaviors[0].behavior.calculate(data);
-          console.log("dataR=",dataR);
         for (var j = 1; j < this.behaviors.length; j++) {
-            console.log("generator is calculating for behavior");
-
-            console.log(this.behaviors[j].behavior.type);
             dataR= this.behaviors[j].behavior.calculate(dataR);
-            console.log("dataR=",dataR);
             }
         }
         this.terminate = true;
@@ -52,6 +49,12 @@ define([
         } 
         this.terminate = false;
       },
+
+      update: function(index,data){
+        for(var i=0;i<this.behaviors.length;i++){
+          this.behaviors[i].behavior.update(index,data);
+        }
+      }
 
     });
 

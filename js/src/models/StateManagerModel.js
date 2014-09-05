@@ -180,7 +180,9 @@ define([
         var value = path.data.renderSignature.slice(0, index + 1);
         value = value.join();
 
-        currentNode.selectByValue(index, value, path, currentNode);
+        sIndexes = currentNode.selectByValue(index, value, path, currentNode);
+       
+
 
       }
 
@@ -529,9 +531,9 @@ define([
     updateStroke: function(width) {
       if (selectTool.selectedNodes.length > 0) {
         for (var i = 0; i < selectTool.selectedNodes.length; i++) {
-          selectTool.selectedNodes[i].updateSelected([{
+          selectTool.selectedNodes[i].updateSelected({
             strokeWidth: Number(width)
-          }]);
+          });
         }
       }
       currentNode.setup([{}]);
@@ -545,13 +547,13 @@ define([
 
         var update;
         if (type == 'stroke') {
-          update = [{
+          update = {
             strokeColor: color
-          }];
+          };
         } else {
-          update = [{
+          update = {
             fillColor: color
-          }];
+          };
 
         }
         for (var i = 0; i < selectTool.selectedNodes.length; i++) {

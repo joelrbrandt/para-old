@@ -16,11 +16,11 @@ define([
   'models/behaviors/TranslateBehavior',
 
   'utils/TrigFunc',
-    'models/behaviors/BehaviorUpdates'
+  'models/behaviors/BehaviorUpdates'
 
 
 
-], function($, _, SceneNode, Instance, PaperManager, Condition, CopyBehavior, Generator,Iterator,TranslateBehavior, TrigFunc, BehaviorUpdates) {
+], function($, _, SceneNode, Instance, PaperManager, Condition, CopyBehavior, Generator, Iterator, TranslateBehavior, TrigFunc, BehaviorUpdates) {
   var paper = PaperManager.getPaperInstance();
 
   Function.prototype.clone = function() {
@@ -46,7 +46,7 @@ define([
      * upperLeft: default origin of this, used for geometric transforms
      */
     constructor: function() {
-      this.scaffold= false;
+      this.scaffold = false;
       this.instances = [];
       this.scaffolds = [];
       this.instance_literals = [];
@@ -77,7 +77,7 @@ define([
         this.createInstance();
       } else {
         var dInstances = data.instances;
-        this.scaffold= data.scaffold;
+        this.scaffold = data.scaffold;
         for (var i = 0; i < dInstances.length; i++) {
           var instance = this.createInstance();
           instance.parseJSON(dInstances[i]);
@@ -86,10 +86,14 @@ define([
       var generator = new Generator();
       var iterator = new Iterator();
       var copyBehavior = new CopyBehavior();
-      iterator.setIteration({init:0,condition:1,increment:1});
-      generator.addBehavior(iterator, ['setup', 'calculate', 'clean'],this);
-      generator.addBehavior(copyBehavior, ['setup', 'calculate', 'clean'],this);
-      this.addBehavior(generator,['setup', 'calculate', 'clean'],this);
+      iterator.setIteration({
+        init: 0,
+        condition: 1,
+        increment: 1
+      });
+      generator.addBehavior(iterator, ['setup', 'calculate', 'clean'], this);
+      generator.addBehavior(copyBehavior, ['setup', 'calculate', 'clean'], this);
+      this.addBehavior(generator, ['setup', 'calculate', 'clean'], this);
 
     },
 
@@ -343,7 +347,7 @@ define([
       jdata.instance_literals = lInstances;
       jdata.children = children;
       jdata.behaviors = behaviors;
-      jdata.scaffold=this.scaffold;
+      jdata.scaffold = this.scaffold;
       return jdata;
     },
 
@@ -368,7 +372,7 @@ define([
         this.instances.splice(index, 0, instance);
         for (var i = 0; i < this.instances.length; i++) {
           this.instances[i].index = i;
-          console.log("after add setting instance to"+i);
+          console.log("after add setting instance to" + i);
         }
       }
 
@@ -385,10 +389,10 @@ define([
     removeInstanceAt: function(index) {
       this.getUpperLeft();
       this.instances.splice(index, 1);
-       for (var i = 0; i < this.instances.length; i++) {
-          this.instances[i].index = i;
-           console.log("after remove setting instance to"+i);
-        }
+      for (var i = 0; i < this.instances.length; i++) {
+        this.instances[i].index = i;
+        console.log("after remove setting instance to" + i);
+      }
     },
 
     getInstancesofParent: function(index) {
@@ -401,10 +405,10 @@ define([
       return iInstances;
     },
 
-    setup: function(data){
+    setup: function(data) {
       this.instances = [];
       var appBehaviors = this.getBehaviorsWithMethod('setup');
-      for(var j=0;j<appBehaviors.length;j++){
+      for (var j = 0; j < appBehaviors.length; j++) {
         appBehaviors[j].behavior.setup(data);
 
       }
@@ -414,7 +418,7 @@ define([
     loop: function(data) {
       ////console.log("loop geom");
       var generator = this.getBehaviorByType('generator')[0].behavior;
-      while(!generator.terminate){
+      while (!generator.terminate) {
         generator.calculate();
       }
       this.clean(data);
@@ -424,8 +428,8 @@ define([
     calculate: function(data, index) {
       ////console.log("geom calculate for index:" + index);
       var appBehaviors = this.getBehaviorsWithMethod('calculate');
-      for(var j=0;j<appBehaviors.length;j++){
-        appBehaviors[j].behavior.calculate(data,index);
+      for (var j = 0; j < appBehaviors.length; j++) {
+        appBehaviors[j].behavior.calculate(data, index);
 
       }
       for (var i = 0; i < data.length; i++) {
@@ -439,8 +443,8 @@ define([
       ////console.log("clean geom");
       var appBehaviors = this.getBehaviorsWithMethod('clean');
 
-       for(var j=0;j<appBehaviors.length;j++){
-       appBehaviors[j].behavior.clean(data);
+      for (var j = 0; j < appBehaviors.length; j++) {
+        appBehaviors[j].behavior.clean(data);
 
       }
       for (var k = 0; k < this.children.length; k++) {
@@ -452,22 +456,17 @@ define([
     },
 
 
-    updateSelected: function(data) {
+    updateSelected: function(indexes, data) {
       //console.log('update selected');
+      console.log("selected indexes =", indexes);
+      for (var j = 0; j < indexes.length; j++) {
 
-      for (var j = 0; j < this.instances.length; j++) {
-        if (this.instances[j].selected) {
-          //console.log("updating selected instance at"+j);
-          for (var i = 0; i < data.length; i++) {
-            var instance = this.instances[j];
-            instance.increment(data[i]);
-
-
-          }
+        //console.log("updating selected instance at"+j);
+        var index = indexes[j];
+        for (var i = 0; i < this.behaviors.length; i++) {
+          this.behaviors[i].behavior.update(index, data);
         }
       }
-
-
 
     },
 
@@ -511,7 +510,7 @@ define([
 
     clearObjects: function() {
       this.instance_literals = [];
-      this.instances = [];
+      //this.instances = [];
       this.clearScaffolds();
 
       for (var i = 0; i < this.children.length; i++) {
@@ -665,6 +664,23 @@ define([
 
     },
 
+    //returns all indexes of selected instances.
+    getSelectedIndexes: function() {
+      var indexes = [];
+      for (var i = 0; i < this.instances.length; i++) {
+        console.log(this.instances[i].selected);
+      if (this.instances[i].selected) {
+          indexes.push(i);
+          console.log("selected found");
+
+        }
+      }
+        console.log("selected indexes returned =", indexes);
+      return indexes;
+
+    },
+
+
     //checks to see if path literal is contained by any children
     containsPath: function(path) {
       for (var i = 0; i < this.children.length; i++) {
@@ -675,7 +691,7 @@ define([
       return false;
     },
 
- 
+
     /* placeholder functions for leftOf, rightOf geometric checks */
     instanceSide: function(instance) {
       return -1;
@@ -704,7 +720,6 @@ define([
       this.scaffolds.push(scaffold);
 
     },
-
 
 
 

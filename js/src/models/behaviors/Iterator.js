@@ -27,11 +27,11 @@ define([
       },
 
       setup: function(data) {
-        return this.condition;
+        return {n:this.condition};
       },
 
       calculate: function(data, index) {
-        console.log("iterator calculate");
+        //console.log("iterator calculate");
         //TODO: eventually set the condition as a function
         if(this.count<this.condition){
           currentCount = this.count;
@@ -46,7 +46,7 @@ define([
       },
 
       clean: function(data) {
-        this.position=0;
+        this.count=0;
       }
 
 

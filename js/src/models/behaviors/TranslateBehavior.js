@@ -4,38 +4,46 @@
 
 define([
     'models/behaviors/BaseBehavior',
-    'models/PaperManager',
-    'utils/TrigFunc'
   ],
 
-  function(BaseBehavior, PaperManager, TrigFunc) {
-    var paper = PaperManager.getPaperInstance();
+  function(BaseBehavior) {
 
     var TranslateBehavior = BaseBehavior.extend({
       name: 'translate',
       type: 'transform',
       constructor: function() {
-        this.x = 0;
-        this.y = 0;
+       this.deltas = [];
       },
 
       //sets parameters for behavior
-      setPosition: function(data) {
-        this.x = data.x;
-        this.y = data.y;
+      addDelta: function(data) {
+        this.deltas.push({x:data.x,y:data.y});
       },
 
-      setup: function(data) {
+      update: function(index,data){
+        console.log("updating translate to", data);
+        if(data.delta){
+          this.deltas[index].x+=data.delta.x;
+          this.deltas[index].y+=data.delta.y;
+        console.log("update succes");
 
+        }
+      },
+      setup: function(data) {
+       //adjust deltas to number defined by iterator... I think this is a good idea?
+       if(data.n){ 
+          this.deltas.slice(0,data.n);
+        }
       },
 
       calculate: function(data) {
-        console.log("translate calculate called for index",data.index);
-
-        console.log("total number of instances for datatype:",this.datatype.instances.length);
-        console.log("translate delta:", this.x,",",this.y);
-        this.datatype.instances[data.index].delta.x +=this.x;
-        this.datatype.instances[data.index].delta.y +=this.y;
+        //set delta to same index as instance if applicable, OR most recent delta.
+        var i = data.index;
+        if(i>this.deltas.length-1){
+          i=this.deltas.length-1;
+        }
+        this.datatype.instances[data.index].delta.x +=this.deltas[i].x;
+        this.datatype.instances[data.index].delta.y +=this.deltas[i].y;
         return {instance:this.datatype.instances[data.index],index:data.index, terminate:false};
 
 
