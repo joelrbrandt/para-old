@@ -21,11 +21,9 @@ define([
       },
 
       update: function(index,data){
-        console.log("updating translate to", data);
         if(data.delta){
           this.deltas[index].x+=data.delta.x;
           this.deltas[index].y+=data.delta.y;
-        console.log("update succes");
 
         }
       },
@@ -37,11 +35,13 @@ define([
       },
 
       calculate: function(data) {
-        //set delta to same index as instance if applicable, OR most recent delta.
+          //set delta to same index as instance if applicable, OR most recent delta.
+       
         var i = data.index;
         if(i>this.deltas.length-1){
           i=this.deltas.length-1;
         }
+         console.log("translate calculate",this.datatype);
         this.datatype.instances[data.index].delta.x +=this.deltas[i].x;
         this.datatype.instances[data.index].delta.y +=this.deltas[i].y;
         return {instance:this.datatype.instances[data.index],index:data.index, terminate:false};

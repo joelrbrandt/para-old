@@ -84,6 +84,7 @@ define([
         }
       }
       var generator = new Generator();
+      generator.sname = "geom";
       var iterator = new Iterator();
       var copyBehavior = new CopyBehavior();
       iterator.setIteration({
@@ -91,9 +92,9 @@ define([
         condition: 1,
         increment: 1
       });
-      generator.addBehavior(iterator, ['setup', 'calculate', 'clean'], this);
-      generator.addBehavior(copyBehavior, ['setup', 'calculate', 'clean'], this);
-      this.addBehavior(generator, ['setup', 'calculate', 'clean'], this);
+      generator.setIterator(iterator);
+      generator.addBehavior(copyBehavior, this);
+      this.addBehavior(generator, this);
 
     },
 
@@ -391,7 +392,7 @@ define([
       this.instances.splice(index, 1);
       for (var i = 0; i < this.instances.length; i++) {
         this.instances[i].index = i;
-        console.log("after remove setting instance to" + i);
+        console.log('after remove setting instance to' + i);
       }
     },
 
@@ -407,9 +408,9 @@ define([
 
     setup: function(data) {
       this.instances = [];
-      var appBehaviors = this.getBehaviorsWithMethod('setup');
-      for (var j = 0; j < appBehaviors.length; j++) {
-        appBehaviors[j].behavior.setup(data);
+      
+      for (var j = 0; j < this.behaviors.length; j++) {
+      this.behaviors[j].behavior.setup(data);
 
       }
       this.loop(data);
@@ -417,19 +418,21 @@ define([
 
     loop: function(data) {
       ////console.log("loop geom");
-      var generator = this.getBehaviorByType('generator')[0].behavior;
-      while (!generator.terminate) {
-        generator.calculate();
-      }
+      for(var i=0;i<this.behaviors.length;i++){
+      var generator = this.behaviors[i].behavior;
+        while (!generator.terminate) {
+          generator.calculate();
+        }
+     }
       this.clean(data);
 
     },
 
     calculate: function(data, index) {
       ////console.log("geom calculate for index:" + index);
-      var appBehaviors = this.getBehaviorsWithMethod('calculate');
-      for (var j = 0; j < appBehaviors.length; j++) {
-        appBehaviors[j].behavior.calculate(data, index);
+
+      for (var j = 0; j < this.behaviors.length; j++) {
+       this.behaviors[j].behavior.calculate(data, index);
 
       }
       for (var i = 0; i < data.length; i++) {
@@ -441,10 +444,9 @@ define([
 
     clean: function(data) {
       ////console.log("clean geom");
-      var appBehaviors = this.getBehaviorsWithMethod('clean');
 
-      for (var j = 0; j < appBehaviors.length; j++) {
-        appBehaviors[j].behavior.clean(data);
+      for (var j = 0; j < this.behaviors.length; j++) {
+       this.behaviors[j].behavior.clean(data);
 
       }
       for (var k = 0; k < this.children.length; k++) {
@@ -457,10 +459,9 @@ define([
 
 
     updateSelected: function(indexes, data) {
-      //console.log('update selected');
+      console.log('update selected:'+ this.type);
       console.log("selected indexes =", indexes);
       for (var j = 0; j < indexes.length; j++) {
-
         //console.log("updating selected instance at"+j);
         var index = indexes[j];
         for (var i = 0; i < this.behaviors.length; i++) {

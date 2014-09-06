@@ -14,6 +14,8 @@ define([
        constructor: function() {
         this.behaviors = [];
         this.termniate = false;
+        this.iterator = null;
+        this.distribution=null;
         BehaviorUpdates.call(this);
       },
 
@@ -30,23 +32,36 @@ define([
 
       },
 
+      setIterator: function(iterator){
+        this.iterator = iterator;
+      },
+
+      setDistribution: function(distribution){
+        this.distribution = distribution;
+      },
+
       calculate: function(data) {
-        //if(this.datatype.type!= 'root'){
-         // console.log("generator calculate for",this.datatype.type);
-        //}
-         if(this.behaviors.length>0){
-          var dataR= this.behaviors[0].behavior.calculate(data);
-        for (var j = 1; j < this.behaviors.length; j++) {
-            dataR= this.behaviors[j].behavior.calculate(dataR);
+       if(this.datatype.type!= 'root'){
+          console.log("generator calculate for",this.sname);
+        }
+        while(!this.iterator.terminate){
+          var  dataR = this.iterator.calculate();
+          if(dataR!==null){
+          for (var j = 0; j < this.behaviors.length; j++) {
+            console.log('index=',dataR.index);
+              dataR= this.behaviors[j].behavior.calculate(dataR);
             }
+          }
         }
         this.terminate = true;
+        console.log('terminated for',this.datatype.type);
       },
 
       clean: function(data) {
         for (var j = 0; j < this.behaviors.length; j++) {
           this.behaviors[j].behavior.clean(data);
         } 
+        this.iterator.clean();
         this.terminate = false;
       },
 

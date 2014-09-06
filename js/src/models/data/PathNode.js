@@ -119,22 +119,24 @@ define([
       path.nodeParent = this;
       //this.getUpperLeft();
       var generator = this.getBehaviorByName('generator');
-
+      generator.sname = "path";
+      generator.iterator.condition=1;
       var translate = new TranslateBehavior();
       translate.addDelta(delta);
-      generator.addBehavior(translate,['setup', 'calculate', 'clean'],this);
+      //translate.addDelta({x:delta.x+5,y:delta.y+5});
+      generator.addBehavior(translate,this);
 
       var rotate = new RotateBehavior();
       rotate.addAngle({angle:0});
-      generator.addBehavior(rotate,['setup', 'calculate', 'clean'],this);
+      generator.addBehavior(rotate,this);
       
       var stroke = new StrokeBehavior();
       stroke.setStroke({color:path.strokeColor});
-      generator.addBehavior(stroke,['setup', 'calculate', 'clean'],this);
+      generator.addBehavior(stroke,this);
 
       var weight = new WeightBehavior();
       weight.setWeight({weight:path.strokeWidth});
-      generator.addBehavior(weight,['setup', 'calculate', 'clean'],this);
+      generator.addBehavior(weight,this);
 
     },
 

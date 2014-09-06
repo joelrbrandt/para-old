@@ -87,9 +87,10 @@ define([
               this.currentPaths.push(path);
             }
             this.trigger('setSelection', path);
-          for(var i=0;i<this.selectedNodes.length;i++){
-              this.selectedIndexes.push(this.selectedNodes[i].getSelectedIndexes());
-            }
+
+      for(var i=0;i<this.selectedNodes.length;i++){
+            this.selectedIndexes.push(this.selectedNodes[i].getSelectedIndexes());
+          }
             if (event.modifiers.option) {
               this.trigger('optionClick', this.selectedNodes[this.selectedNodes.length - 1]);
             }
