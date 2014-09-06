@@ -34,7 +34,7 @@ define([
         var pathNode  = new PathNode();
           pathNode.name = "Path_"+nameVal;
             nameVal++;
-        pathNode.createInstanceFromPath(this.currentPath.clone());
+        pathNode.setLiteral(this.currentPath.clone());
         this.trigger('nodeAdded',pathNode);
          this.trigger('rootUpdate');
         this.trigger('rootRender');  

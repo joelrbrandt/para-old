@@ -98,23 +98,6 @@ define([
 
      //test code for generators
 
-     var condition = new Condition();
-     var action = new Action()
-     var generator = new Generator(action,condition);
-
-     /*console.log(generator.tick());
-     console.log(generator.tick());
-     console.log(generator.tick());
-     console.log(generator.tick());
-     console.log(generator.tick());
-     console.log(generator.tick());
-     console.log(generator.tick());
-     console.log(generator.tick());
-    console.log(generator.tick());
-
-     console.log(generator.tick());
-
-     console.log(generator.tick());*/
 
 
 
@@ -158,13 +141,15 @@ define([
     //moves down based on path
     moveDownNode: function(path) {
       var children = currentNode.children;
+      if(currentNode.children.length>0){
       for (var i = 0; i < children.length; i++) {
         if (children[i].containsPath(path) && children[i].type != 'path') {
           currentNode = children[i];
           toolCollection.get(this.get('state')).currentNode = children[i];
         }
       }
-      ////console.log('current node type='+currentNode.type);
+    }
+      console.log('current node type='+currentNode.type);
       this.rootRender();
     },
 
@@ -181,7 +166,7 @@ define([
         value = value.join();
 
         sIndexes = currentNode.selectByValue(index, value, path, currentNode);
-       
+
 
 
       }
@@ -199,11 +184,10 @@ define([
 
       rootNode.clearObjects();
       rootNode.render(null, currentNode);
-
-      // var numChildren = paper.project.activeLayer.children.length;
+      var numChildren = paper.project.activeLayer.children.length;
       this.trigger('renderComplete');
-      // //console.log('total number of children='+numChildren);
-      // //console.log( paper.project.activeLayer.children);
+      console.log('total number of paths='+numChildren);
+      //console.log( paper.project.activeLayer.children);
     },
 
     rootUpdate: function() {
@@ -531,9 +515,9 @@ define([
     updateStroke: function(width) {
       if (selectTool.selectedNodes.length > 0) {
         for (var i = 0; i < selectTool.selectedNodes.length; i++) {
-          selectTool.selectedNodes[i].updateSelected({
+          /*selectTool.selectedNodes[i].updateSelected({
             strokeWidth: Number(width)
-          });
+          });*/
         }
       }
       currentNode.setup([{}]);
@@ -558,7 +542,7 @@ define([
         }
         for (var i = 0; i < selectTool.selectedNodes.length; i++) {
 
-          selectTool.selectedNodes[i].updateSelected(update);
+         // selectTool.selectedNodes[i].updateSelected(update);
         }
       }
       currentNode.setup([{}]);

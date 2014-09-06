@@ -16,6 +16,7 @@ define([
        this.condition = 0;
        this.increment = 0;
        this.count = 0;
+       this.terminate = false;
       },
 
       //sets parameters for behavior
@@ -31,22 +32,24 @@ define([
       },
 
       calculate: function(data, index) {
-        //console.log("iterator calculate");
+        console.log('iterator calculate');
         //TODO: eventually set the condition as a function
         if(this.count<this.condition){
-          currentCount = this.count;
+          var currentCount = this.count;
           this.count+=this.increment;
-          return {terminate:false,index:currentCount};
+
+          return {index:currentCount};
         }
         else{
-          this.count+=this.increment;
-          return {terminate:true,index:this.count}
+          this.terminate= true;
+          return null;
         }
 
       },
 
       clean: function(data) {
         this.count=0;
+        this.terminate = false;
       }
 
 

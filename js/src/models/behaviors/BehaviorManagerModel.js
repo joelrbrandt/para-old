@@ -7,13 +7,16 @@ define([
   'backbone',
   'utils/TrigFunc',
   'models/data/GeometryNode',
+   'models/behaviors/Generator',
+   'models/behaviors/Iterator',
   'models/behaviors/CopyBehavior',
+  'models/behaviors/TranslateBehavior',
   'models/behaviors/DistributeBehavior',
   'models/behaviors/RadialDistributeBehavior',
   'models/behaviors/FollowPathBehavior',
   'models/behaviors/RotateBehavior',
 
-], function($, _, Backbone, TrigFunc, GeometryNode, CopyBehavior, DistributeBehavior, RadialDistributeBehavior, FollowPathBehavior, RotateBehavior) {
+], function($, _, Backbone, TrigFunc, GeometryNode, Generator, Iterator, CopyBehavior, TranslateBehavior, DistributeBehavior, RadialDistributeBehavior, FollowPathBehavior, RotateBehavior) {
   var nameVal = 0;
   var BehaviorManagerModel = Backbone.Model.extend({
 
@@ -64,14 +67,8 @@ define([
       if (name === 'copy') {
         this.addCopyBehavior(nodes, 2, data);
       } else if (name == 'linear') {
-        if (!data) {
-          if (!nodes[0].getBehaviorByName('copy')) {
-            this.addCopyBehavior(nodes, 3);
-          } else {
-            this.addCopyBehavior(nodes);
-          }
-        }
-        this.addLinearBehavior(nodes, data);
+       
+        this.addLinearBehavior(nodes, behaviorNode);
 
       } else if (name == 'radial') {
         //console.log("adding radial behavior");
@@ -111,7 +108,7 @@ define([
         var node = nodes[i];
         var containsCopy = node.containsBehaviorType('copy');
         if (!containsCopy) {
-          nodes[i].addBehavior(copyBehavior, ['setup'], nodes[i], 'first');
+          nodes[i].addBehavior(copyBehavior, nodes[i]);
         }
         //TODO: eventually will need a method of updating the correct copy behavior to update (ie via scope)
         if (data) {
@@ -144,8 +141,8 @@ define([
         rotateBehavior = new RotateBehavior();
         start = 0;
         for (var i = start; i < nodes.length; i++) {
-          nodes[i].addBehavior(rotateBehavior, ['setup', 'calculate', 'clean'], nodes[i]);
-          nodes[i].addBehavior(followPathBehavior, ['setup', 'calculate', 'clean'], nodes[i]);
+          nodes[i].addBehavior(rotateBehavior,nodes[i]);
+          nodes[i].addBehavior(followPathBehavior, nodes[i]);
 
         }
       } else {
@@ -153,8 +150,8 @@ define([
          rotateBehavior = new RotateBehavior();
         nodes[0].scaffold=true;
         for (var i = start; i < nodes.length; i++) {
-           nodes[i].addBehavior(rotateBehavior, ['setup', 'calculate', 'clean'], nodes[i]);
-          nodes[i].addBehavior(followPathBehavior, ['setup', 'calculate', 'clean'], nodes[i]);
+           nodes[i].addBehavior(rotateBehavior, nodes[i]);
+          nodes[i].addBehavior(followPathBehavior,nodes[i]);
          
           nodes[i].instances[0].delta.x = nodes[0].getLiteral().firstSegment.point.x;
           nodes[i].instances[0].delta.y =  nodes[0].getLiteral().firstSegment.point.y;
@@ -179,29 +176,51 @@ define([
           }
         }
 
-        node.addBehavior(radialBehavior, ['setup', 'calculate', 'clean'],node);
+        node.addBehavior(radialBehavior,node);
 
       }
     },
 
-    addLinearBehavior: function(nodes, data) {
-      var linearBehavior = new DistributeBehavior();
-      for (var i = 0; i < nodes.length; i++) {
-        var node = nodes[i];
-        var containsDist = node.containsBehaviorType('distribution');
-        var containsLin = node.containsBehaviorName('linear');
-        if (containsDist && !containsLin) {
-          var toRemove = node.getBehaviorByType('distribution');
-          for (var j = 0; j < toRemove.length; j++) {
-            //console.log('removing behavior at:'+i+','+toRemove[j].behavior.name);
+    addLinearBehavior: function(nodes, parentNode) {
+      console.log("parentNode=",parentNode);
+       var pgenerator = parentNode.getBehaviorByName('generator');
+       pgenerator.sname = "parent dist";
+      pgenerator.iterator.condition=1;
+      var ptranslate = new TranslateBehavior();
+      ptranslate.addDelta({x:0,y:0});
+      //translate.addDelta({x:delta.x+5,y:delta.y+5});
+      pgenerator.addBehavior(ptranslate,parentNode);
 
-            node.removeBehavior(toRemove[j].behavior.name);
-          }
-        }
+      var protate = new RotateBehavior();
+      protate.addAngle({angle:0});
+      pgenerator.addBehavior(protate,parentNode);
 
-        node.addBehavior(linearBehavior, ['setup', 'calculate', 'clean'],node);
 
-      }
+      var node = nodes[0];
+    node.getBehaviorByName('generator').iterator.condition=2;
+
+      var distribution = new DistributeBehavior();
+      var generator = new Generator();
+      generator.sname="distribute"
+      var iterator = new Iterator();
+      iterator.setIteration({
+        init: 0,
+        condition: 2,
+        increment: 1
+      });
+      generator.setIterator(iterator);
+      generator.setDistribution(distribution);
+      node.addBehavior(generator, node);
+
+      generator.iterator.condition=2;
+      generator.distribution = distribution;
+      var translate =new TranslateBehavior();
+      translate.addDelta({x:0,y:0});
+      translate.addDelta({x:10,y:10});
+      generator.addBehavior(translate,node);
+
+
+      
     },
 
 

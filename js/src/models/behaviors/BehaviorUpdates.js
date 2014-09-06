@@ -63,25 +63,22 @@ define([
       };
 
 
-      this.addBehavior = function(behavior, methods,datatype, index) {
+      this.addBehavior = function(behavior, datatype, index) {
         behavior.setDatatype(datatype);
         if (index) {
           if (index === 'last') {
             this.behaviors.push({
-              behavior: behavior,
-              methods: methods
+              behavior: behavior
             });
           } else {
             this.behaviors.splice(index, 0, {
-              behavior: behavior,
-              methods: methods
+              behavior: behavior
             });
 
           }
         } else {
           this.behaviors.push({
-            behavior: behavior,
-            methods: methods
+            behavior: behavior
           });
         }
       };

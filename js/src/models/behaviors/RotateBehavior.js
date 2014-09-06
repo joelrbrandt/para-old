@@ -38,6 +38,8 @@ define([
 
       calculate: function(data) {
   //set delta to same index as instance if applicable, OR most recent delta.
+          console.log("rotate calculate");
+
         var i = data.index;
         if(i>this.angles.length-1){
           i=this.angles.length-1;

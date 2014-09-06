@@ -90,7 +90,7 @@ define([
       },
 
       calculate: function(data){
-        // console.log("copy calculate");
+        console.log("copy calculate");
         if(data.terminate){
           return {terminate:true};
         }
