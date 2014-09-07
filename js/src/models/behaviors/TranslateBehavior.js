@@ -41,9 +41,10 @@ define([
         if(i>this.deltas.length-1){
           i=this.deltas.length-1;
         }
-         console.log("translate calculate",this.datatype);
+         console.log("translate calculate",this.datatype.type);
         this.datatype.instances[data.index].delta.x +=this.deltas[i].x;
         this.datatype.instances[data.index].delta.y +=this.deltas[i].y;
+        debugger;
         return {instance:this.datatype.instances[data.index],index:data.index, terminate:false};
 
 

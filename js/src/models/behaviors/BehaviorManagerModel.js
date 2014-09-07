@@ -217,7 +217,7 @@ define([
       var translate =new TranslateBehavior();
       translate.addDelta({x:0,y:0});
       translate.addDelta({x:10,y:10});
-      generator.addBehavior(translate,node);
+      pgenerator.addBehavior(translate,node);
 
 
       
