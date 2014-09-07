@@ -53,6 +53,7 @@ define([
       this.behaviors = [];
       this.originalMethods = [];
       this.conditions = [];
+      this.instanceSelect = false;
       this.upperLeft = {
         x: 0,
         y: 0
@@ -408,9 +409,9 @@ define([
 
     setup: function(data) {
       this.instances = [];
-      
+
       for (var j = 0; j < this.behaviors.length; j++) {
-      this.behaviors[j].behavior.setup(data);
+        this.behaviors[j].behavior.setup(data);
 
       }
       this.loop(data);
@@ -418,12 +419,14 @@ define([
 
     loop: function(data) {
       ////console.log("loop geom");
-      for(var i=0;i<this.behaviors.length;i++){
-      var generator = this.behaviors[i].behavior;
-        while (!generator.terminate) {
-          generator.calculate();
+      
+        for (var i = 0; i < this.behaviors.length; i++) {
+          var generator = this.behaviors[i].behavior;
+          while (!generator.terminate) {
+            generator.calculate();
+          }
         }
-     }
+      
       this.clean(data);
 
     },
@@ -432,21 +435,17 @@ define([
       ////console.log("geom calculate for index:" + index);
 
       for (var j = 0; j < this.behaviors.length; j++) {
-       this.behaviors[j].behavior.calculate(data, index);
+        this.behaviors[j].behavior.calculate(data, index);
 
       }
-      for (var i = 0; i < data.length; i++) {
-        var instance = this.instances[index];
-        instance.update(data[i]);
-
-      }
+      
     },
 
     clean: function(data) {
       ////console.log("clean geom");
 
       for (var j = 0; j < this.behaviors.length; j++) {
-       this.behaviors[j].behavior.clean(data);
+        this.behaviors[j].behavior.clean(data);
 
       }
       for (var k = 0; k < this.children.length; k++) {
@@ -459,7 +458,7 @@ define([
 
 
     updateSelected: function(indexes, data) {
-      console.log('update selected:'+ this.type);
+      console.log('update selected:' + this.type);
       console.log("selected indexes =", indexes);
       for (var j = 0; j < indexes.length; j++) {
         //console.log("updating selected instance at"+j);
@@ -511,7 +510,6 @@ define([
 
     clearObjects: function() {
       this.instance_literals = [];
-      //this.instances = [];
       this.clearScaffolds();
 
       for (var i = 0; i < this.children.length; i++) {
@@ -670,13 +668,13 @@ define([
       var indexes = [];
       for (var i = 0; i < this.instances.length; i++) {
         console.log(this.instances[i].selected);
-      if (this.instances[i].selected) {
+        if (this.instances[i].selected) {
           indexes.push(i);
           console.log("selected found");
 
         }
       }
-        console.log("selected indexes returned =", indexes);
+      console.log("selected indexes returned =", indexes);
       return indexes;
 
     },

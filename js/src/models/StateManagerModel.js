@@ -141,14 +141,16 @@ define([
     //moves down based on path
     moveDownNode: function(path) {
       var children = currentNode.children;
-      if(currentNode.children.length>0){
+    
       for (var i = 0; i < children.length; i++) {
         if (children[i].containsPath(path) && children[i].type != 'path') {
           currentNode = children[i];
           toolCollection.get(this.get('state')).currentNode = children[i];
         }
       }
-    }
+    
+ 
+
       console.log('current node type='+currentNode.type);
       this.rootRender();
     },
