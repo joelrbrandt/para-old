@@ -15,8 +15,9 @@ require.config({
         'justmath': '../lib/justmath/justmath',
         'sylvester': '../lib/sylvester/sylvester',
         'minicolors':'../lib/minicolors/minicolors', 
+        'tinycolor': '../lib/tinycolor/tinycolor',
+        'pickacolor':'../lib/pick-a-color/pick-a-color', 
         'filesaver': '../lib/filesaver/filesaver',
-        'minicolors'  : '../lib/minicolors/minicolors',
         'slider' : '../lib/slider/slider'
 
     },
@@ -46,13 +47,24 @@ require.config({
         sylvester:{
           exports:'Sylvester'
         },
-       
+       'minicolors': {     //<-- cookie depends on Jquery and exports nothing
+        deps: ['jquery']
+        },
+        'tinycolor':{
+          deps: ['jquery'],
+          exports: 'Tinycolor'
+        },
+         'pickacolor': {     
+        deps: ['tinycolor'],
+        exports: 'Pickacolor'
+        },
         filesaver:{
           exports:'filesaver'
         },
-        'minicolors': {     //<-- cookie depends on Jquery and exports nothing
-        deps: ['jquery']
-        },
+       
+        
+        
+        
          'slider': {     //<-- cookie depends on Jquery and exports nothing
         deps: ['jquery']
         }
