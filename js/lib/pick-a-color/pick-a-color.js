@@ -36,6 +36,9 @@
         allowBlank            : false,
         inlineDropdown        : false,
         basicColors           : {
+          w1     : 'F0ECE1',
+          w2    : 'fff',
+          blk    :'000',
           b1     : '0E3D63',
           b2     : '147E8E',
           b3     : '16A2A6',
@@ -47,9 +50,8 @@
           o1     : 'F2682A',
           o2     : 'F1A54D',
           o3     : 'EFB45F',
-          o4     : 'FEE4BF',
-          w1     : 'F0ECE1',
-          w2    : 'fff'
+          o4     : 'FEE4BF'
+
           
         }
       }, options);
