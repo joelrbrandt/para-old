@@ -685,7 +685,7 @@
               mySavedColorsInfo = arguments[0].savedColorsInfo;
           selectedColor = tinycolor(selectedColor).toHex();
           $(myElements.thisEl).val(selectedColor);
-          $(myElements.thisEl).trigger("change");
+          $(myElements.thisEl).trigger("color-change");
           methods.updatePreview(myElements.thisEl);
           methods.addToSavedColors(selectedColor,mySavedColorsInfo,myElements.savedColorsContent);
           methods.closeDropdown(myElements.colorPreviewButton,myElements.colorMenu); // close the dropdown
@@ -1145,7 +1145,7 @@
           $(myElements.advancedPreview).click( function () {
             var selectedColor = tinycolor($(this).css("background-color")).toHex();
             $(myElements.thisEl).val(selectedColor);
-            $(myElements.thisEl).trigger("change");
+            $(myElements.thisEl).trigger("color-change");
             methods.updatePreview(myElements.thisEl);
             methods.addToSavedColors(selectedColor,mySavedColorsInfo,myElements.savedColorsContent);
             methods.closeDropdown(myElements.colorPreviewButton,myElements.colorMenu); // close the dropdown
@@ -1168,7 +1168,7 @@
                 $thisEl.parent().attr("class").split("#")[1] :
                 $thisEl.attr("class").split("#")[1];
               $(myElements.thisEl).val(selectedColor);
-              $(myElements.thisEl).trigger("change");
+              $(myElements.thisEl).trigger("color-change");
               methods.updatePreview(myElements.thisEl);
               methods.closeDropdown(myElements.colorPreviewButton,myElements.colorMenu);
               methods.addToSavedColors(selectedColor,mySavedColorsInfo,myElements.savedColorsContent);
